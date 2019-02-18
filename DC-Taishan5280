@@ -1,0 +1,6 @@
+MAIN="Taishan5280.adoc"
+ADOC_IMG_DIR="adoc/images"
+ADOC_TYPE="book"
+ADOC_POST="yes"
+STYLEROOT="/usr/share/xml/docbook/stylesheet/suse2013-ns"
+DRAFT=no
