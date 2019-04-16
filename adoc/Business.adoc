@@ -1,0 +1,15 @@
+== Business Problem and Business Value
+=== SUSE Enterprise Storage
+SUSE Enterprise Storage delivers a highly scalable, resilient, self-healing storage system designed for large scale environments ranging from hundreds of Terabytes to Petabytes. This software defined storage product can reduce IT costs by leveraging industry standard servers to present unified storage servicing block, file, and object protocols. Having storage that can meet the current needs and requirements of the data center while supporting topologies and protocols demanded by new web-scale applications, enables administrators to support the ever-increasing storage requirements of the enterprise with ease.
+
+=== {vendor} {vPlatform}
+{vendor} {vPlatform} provide a cost effective and scalable platform for the deployment of SUSE Enterprise Storage. These platforms <complete with description of Lenovo servers and their unique value/features>
+// FIXME
+
+=== Business Problem 
+Customers of all sizes face a major storage challenge: While the overall cost per Terabyte of physical storage has gone down over the years, a data growth explosion took place driven by the need to access and leverage new data sources (ex: external sources such as social media) and the ability to "manage" new data types (ex: unstructured or object data). These ever increasing "data lakes" need different access methods: File, block, or object.
+
+Addressing these challenges with legacy storage solutions would require either a number of specialized products (usually driven by access method) with traditional protection schemes (ex: RAID). These solutions struggle when scaling from Terabytes to Petabytes at reasonable cost and performance levels.
+
+=== Business Value 
+This software defined storage solution enables transformation of the enterprise infrastructure by providing a unified platform where structured and unstructured data can co-exist and be accessed as file, block, or object depending on the application requirements. The combination of open-source software (Ceph) and industry standard servers reduce cost while providing the on-ramp to unlimited scalability needed to keep up with future demands.

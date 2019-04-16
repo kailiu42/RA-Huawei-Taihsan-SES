@@ -1,318 +1,57 @@
 //Fill in the following variables to rapidly populate this document template
-
-:SESversion: v5.5
-:SLESversion: 12 SP3
+:SESVersion: v5.5
+:SLESVersion: 12 SP3
 :vendor: Huawei
-:vplatform: Taishan
-:servermodelcount: two
-:OSDmodel: 5280
-:OSDYESlink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=147070
+:vPlatform: Taishan
+:serverModelCount: two
+:OSDModel: 5280
+:OSDYESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=147070
 :OSDRAM: 128GB
-:OSDCPUcount: 2
-:OSDCPUmodel: HiSilicon 1616
-:OSDDrivedesc: mirrored M.2
-:node2roles: Admin, monitor, and protocol gateways
-:node2model: 2280
-:node2CPUcount: 1
+:OSDCPUCount: 2
+:OSDCPUModel: HiSilicon 1616
+:OSDDriveDesc: Hard Disk
+:node2Roles: Admin, monitor, and protocol gateways
+:node2Model: 2280
+:node2CPUCount: 1
 :node2RAM: 32GB
-:node2OSDrivedesc: mirrored M.2
-:node2YESlink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997
+:node2OSDriveDesc: mirrored SAS
+:node2YESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997
 :switchSpeed: 10Gb
-:switchmodel: CE6851-48S6Q-HI
-:switchvendor: Huawei
+:switchModel: CE6851-48S6Q-HI
+:switchVendor: Huawei
 //Set to 1 to include the information on configuring ConnectX-4 as Ethernet
 :MellanoxCX4Present: 0
-:BondingType: failover
+:bondingType: failover
 
-= SUSE(R) Enterprise Storage on {vendor} {vplatform}
+= SUSE(R) Enterprise Storage on {vendor} {vPlatform} Implementation Guide
+Kai Liu <kai.liu@suse.com>
+v1.0, April 15 2019: First edition
 
-*Implementation Guide*
+// Introductions, target audience and hw&sw configuration
+include::Introduction.adoc[]
 
+// Business problem and value
+include::Business.adoc[]
 
+// Requirements
+include::Requirements.adoc[]
 
-
-
-
-Kai Liu, SUSE <kai.liu@suse.com> +
-Feb 2019
-
-''''
-
-== Introduction
-The objective of this guide is to present a step-by-step guide on how to implement SUSE Enterprise Storage {SESversion} on the {vendor} {vplatform} platform.  It is suggested that the document be read in its entirety, along with the supplemental appendix information before attempting the process.
-
-The deployment presented in this guide aligns with architectural best practices and will support the implementation of all currently supported protocols as identified in the SUSE Enterprise Storage documentation.
-
-Upon completion of the steps in this document, a working SUSE Enterprise Storage {SESversion} cluster will be operational as described in the https://www.suse.com/documentation/ses-5/book_storage_admin/data/book_storage_admin.html[SUSE Enterprise Storage Deployment and Administration Guide.]
-
-== Target Audience
-This reference guide is targeted at administrators who deploy software defined storage solutions within their data centers and make that storage available to end users.  By following this document, as well as those referenced herein, the administrator should have a full view of the SUSE Enterprise Storage architecture, deployment and administrative tasks, with a specific set of recommendations for deployment of the hardware and networking platform.
-
-== Business Value
-*SUSE Enterprise Storage*
-
-SUSE Enterprise Storage delivers a highly scalable, resilient, self-healing storage system designed for large scale environments ranging from hundreds of Terabytes to Petabytes. This software defined storage product can reduce IT costs by leveraging industry standard servers to present unified storage servicing block, file, and object protocols. Having storage that can meet the current needs and requirements of the data center while supporting topologies and protocols demanded by new web-scale applications, enables administrators to support the ever-increasing storage requirements of the enterprise with ease.
-
-*{vendor} {vplatform}*
-
-{vendor} {vplatform} provide a cost effective and scaleable platform for the deployment of SUSE Enterprise Storage.  These platforms <complete with description of Lenovo servers and their unique value/features>
-// FIXME
-
-== Hardware & Software
-The recommended architecture for SUSE Enterprise Storage on {vendor} {vplatform} leverages {servermodelcount} models of {vendor} servers.  The role and functionality of each type of system within the SUSE Enterprise Storage environment will be explained in more detail in the architectural overview section.
-
-.Storage Nodes:
-* {vendor} {OSDmodel}  {OSDYESlink}
-
-.{node2roles}:
-* {vendor} {node2model}  {node2YESlink}
-
-.Switches:
-* {switchvendor} {switchmodel} {switchspeed}
-
-.Software:
-* SUSE Enterprise Storage {SESversion}
-* SUSE Linux Enterprise Server {SLESversion}
-TIP: Please note that limited use subscriptions are provided with SUSE Enterprise Storage as part of the subscription entitlement
-
-== Requirements
-
-Enterprise storage systems require reliability, manageability, and serviceability. The legacy storage players have established a high threshold for each of these areas and now expect the software defined storage solutions to offer the same.  Focusing on these areas helps SUSE make open source technology enterprise consumable. When combined with highly reliable and manageable hardware from Lenovo, the result is a solution that meets the customer's expectation.
-
-
-=== Functional Requirements
-
-A SUSE Enterprise Storage solution is:
-
-* Simple to setup and deploy, within the documented guidelines of system hardware, networking and environmental prerequisites.
-* Adaptable to the physical and logical constraints needed by the business, both initially and as needed over time for performance, security, and scalability concerns.
-* Resilient to changes in physical infrastructure components, caused by failure or required maintenance.
-* Capable of providing optimized object and block services to client access nodes, either directly or through gateway services.
-
-// Include solution architecture standard section
+// Standard SES architecture information
 include::SES-Arch.adoc[]
 
-== Component Model
-The preceding sections provided information on the both the overall HPE hardware as well as an introduction to the Ceph software architecture. In this section, the focus is on the SUSE components: SUSE Linux Enterprise Server (SLES), SUSE Enterprise Storage (SES), and the Subscription Management Tool (SMT).
+// Component model
+include::Component.adoc[]
 
-.Component overview (SUSE)
+// Deployment steps
+include::Deployment.adoc[]
 
-* SUSE Linux Enterprise Server - A world class secure, open source server operating system, equally adept at powering physical, virtual, or cloud-based mission-critical workloads. Service Pack 3 further raises the bar in helping organizations to accelerate innovation, enhance system reliability, meet tough security requirements and adapt to new technologies.
+// Conclusion
+include::Conclusion.adoc[]
 
+// References and Resources
+include::References.adoc[]
 
-* Subscription Management Tool for SLES - allows enterprise customers to optimize the management of SUSE Linux Enterprise (and extensions such as SUSE Enterprise Storage) software updates and subscription entitlements. It establishes a proxy system for SUSE Customer Center with repository and registration targets.
-
-* SUSE Enterprise Storage - Provided as an extension on top of SUSE Linux Enterprise Server, this intelligent software-defined storage solution, powered by Ceph technology with enterprise engineering and support from SUSE enables customers to transform enterprise infrastructure to reduce costs while providing unlimited scalability.
-
-== Deployment
-
-This deployment section should be seen as a supplement online https://www.suse.com/documentation/[documentation.]  Specifically, the https://www.suse.com/documentation/suse-enterprise-storage-5/book_storage_deployment/data/book_storage_deployment.html[SUSE Enterprise Storage 5 Deployment Guide] as well as https://www.suse.com/documentation/sles-12/book_sle_admin/data/book_sle_admin.html[SUSE Linux Enterprise Server Administration Guide.] It is assumed that a Subscription Management Tool server exists within the environment. If not, please follow the information in https://www.suse.com/documentation/sles-12/book_smt/data/book_smt.html[Subscription Management Tool (SMT) for SLES] to make one available. The emphasis is on specific design and configuration choices.
-
-=== Network Deployment Overview
-The following considerations for the network configuration should be attended to:
-
-* Ensure that all network switches are updated with consistent firmware versions.
-ifeval::["{BondingType}" == "lacp"]
-* Configure 802.3ad for system port bonding between the switches, plus enable jumbo frames.
-
-
-* Specific configuration for this deployment can be found in Appendix C: Network Switch Configuration
-// FIXME Appendix
-endif::[]
-
-* Network IP addressing and IP ranges need proper planning. In optimal environments, a single storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, single subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current as well as future growth should be taken into consideration.
-* Setup DNS A records for all nodes. Decide on subnets and VLANs and configure the switch ports accordingly.
-* Ensure that you have access to a valid, reliable NTP service, as this is a critical requirement for all nodes. If not, it is recommended to use the admin node.
-
-=== Hardware Recommended Actions
-The following considerations for the hardware platforms should be attended to:
-
-* Ensure Boot Mode is set to UEFI for all the physical nodes that comprise the SUSE Enterprise Storage Cluster.
-* Verify BIOS/uEFI level on the physical servers correspond to those on the SUSE YES certification for all the platforms.
-* Configure the boot media as RAID-1
-* Configure all data and journal devices as individual RAID-0
-
-
-==== Specific Hardware Configuration
-To ensure maximum performance of the cluster, enter the bios system configuration and click UEFI Setup.  Next click System Settings.  Under Choose Operating Mode, change the setting to Maximum Performance
-[[img-PerformanceMode]]
-.Setting Performance Mode
-image::PerformanceMode.png[Performance Mode, 640, 480]
-
-ifeval::[{MellanoxCX4Present} == 1]
-
-===== Set ConnectX-4 VPI NICS to Ethernet Mode
-This configuration includes Mellanox ConnectX-4 VPI Network Interface Cards. These cards often arrive in Infiniband mode and need to be set to Ethernet mode.  The way to affect this change involves following the steps outlined in the http://www.mellanox.com/pdf/prod_software/SUSE_Linux_Enterprise_Server_(SLES)_12_SP3_Driver_User_Manual.pdf[Mellanox manual for the inbox driver on SUSE Linux Enterprise 12 SP3].
-
-_Replace the bold string with your PCI ID's_
-
-The steps required are:
-[subs="attributes,quotes"]
-----
-# zypper in mstflint
-# lspci |grep Mellanox
-# mstconfig -d **_Your_PCI_ID_** s LINK_TYPE_P1=ETH
-# mstconfig -d **_Your_PCI_ID_** s LINK_TYPE_P2=ETH
-# reboot
-----
-[[img-NICmode]]
-.Change Mellanox ConnectX-4 VPI NIC Mode
-image::ConnectX-4_NIC_mode.png[NIC Mode Change,640, 480]
-endif::[]
-
-
-=== Operating System Installation
-
-There are several key tasks to ensure are performed correctly during the operating system installation.  During the SUSE Linux Enterprise installation, be sure and register the system with an update server.  Ideally, this is a local SMT server which will reduce the time required for updates to be downloaded and applied to all nodes.  By updating the nodes during installation, the system will deploy with the most up-to-date packages available, helping to ensure the best experience possible.
-
-To speed installation, on the System Role screen, it is suggested to select KVM Virtualization Host.  When the Installation Settings screen is reached, select *Software* and then un-check KVM Host Server.  The resulting installation is a text mode server that is an appropriate base OS for SUSE Enterprise Server.
-
-The next item is to ensure that the operating system is installed on the correct device.  Especially on OSD nodes, the system may not choose the right drive by default.  The proper way to ensure the right device is being used is to select *Create Partition Setup* on the Suggested Partitioning screen. This will then display a list of devices, allowing selection of the correct boot device.  Next select *Edit Proposal Settings* and unselect the *Propose Separate Home Partition* checkbox.
-
-Do ensure that NTP is configured to point to a valid, physical NTP server.  This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster.
-
-
-=== SUSE Enterprise Storage Installation & Configuration
-
-==== Software Deployment configuration (Deepsea and Salt)
-Salt, along with DeepSea, is a stack of components that help deploy and manage server infrastructure. It is very scalable, fast, and relatively easy to get running.
-
-There are three key Salt imperatives that need to be followed:
-
-
-* The Salt Master is the host that controls the entire cluster deployment. Ceph itself should NOT be running on the master as all resources should be dedicated to Salt master services. In our scenario, we used the Admin host as the Salt master.
-
-*	Salt minions are nodes controlled by Salt master. OSD, monitor, and gateway nodes are all Salt minions in this installation.
-
-*	Salt minions need to correctly resolve the Salt master’s host name over the network. This can be achieved through configuring unique host names per interface (eg osd1-cluster.suse.lab and osd1-public.suse.lab) in DNS and/or local /etc/hosts files.
-
-
-Deepsea consists of series of Salt files to automate the deployment and management of a Ceph cluster. It consolidates the administrator’s decision making in a single location around cluster assignment, role assignment and profile assignment. Deepsea collects each set of tasks into a goal or stage.
-
-The following steps, performed in order, will be used for this reference implementation:
-
-. Install DeepSea on the Salt master which is the Admin node:
-+
-----
-zypper in deepsea
-----
-+
-. Start the salt-master service and enable:
-+
-----
-systemctl start salt-master.service
-systemctl enable salt-master.service
-----
-+
-. Install the salt-minion on all cluster nodes (including the Admin):
-+
-----
-zypper in salt-minion
-----
-+
-. Configure all minions to connect to the Salt master:
-+
-Modify the entry for master in the _/etc/salt/minion_
-+
-----
-master: sesadmin.domain.com
-----
-+
-.	Start the salt-minion service and enable:
-+
-----
-systemctl start salt-minion.service
-systemctl enable salt-minion.service
-----
-+
-.	List and accept all Salt keys on the Salt master: salt-key --accept-all and verify their acceptance
-+
-----
-salt-key --list-all
-salt-key –-accept-all
-----
-+
-.	If the OSD nodes were used in a prior installation, zap ALL the OSD disks (ceph-disk zap <DISK>)
-+
-.	At this point, you can deploy and configure the cluster:
-..	Prepare the cluster:
-+
-----
-salt-run state.orch ceph.stage.prep
-----
-+
-..	Run the discover stage to collect data from all minions and create configuration fragments:
-+
-----
-salt-run state.orch ceph.stage.disovery
-----
-+
-..	A proposal for the storage layout needs to be generated at this time.  For the hardware configuration used for this work, the following command was utilized:
-+
-----
-salt-run proposal.populate name=apollo ratio=9 wal=740-770 db=740-770 target='osd*' db-size=40g wal-size=5g data=5000-7000
-----
-+
-
-+
-The result of the above command is a deployment proposal for the disks that uses devices with a reported size of five to six terabytes for data and establishes a 5GB write-ahead log partition and a 40GB database partition for each spinner on one of the SSDs in a ratio of 9 spinners to each SSD.
-
-
-..	A _/srv/pillar/ceph/proposals/policy.cfg_ file needs to be created to instruct Salt on the location and configuration files to use for the different components that make up the Ceph cluster (Salt master, admin, monitor, and OSDs).
-***	See Appendix B for the _policy.cfg_ file used in the installation.
-
-..	Next, proceed with the configuration stage to parse the _policy.cfg_ file and merge the included files into the final form
-+
-----
-salt-run state.orch ceph.stage.configure
-----
-+
-..	The last two steps manage the actual deployment.
-+
-Deploy monitors and ODS daemons first:
-+
-----
-salt-run state.orch ceph.stage.deploy
-----
-+
-NOTE: The command can take some time to complete, depending on the size of the cluster.
-+
-..	Check for successful completion via:
-+
-----
-ceph –s
-----
-+
-..	Finally, deploy the services-gateways (iSCSI, RADOS, and openATTIC to name a few):
-+
-----
-salt-run state.orch ceph.stage.services
-----
-
-==== Post-deployment quick test
-The steps below can be used (regardless of the deployment method) to validate the overall cluster health:
-
-----
-ceph status
-ceph osd pool create test 1024
-rados bench –p test 300 write --no-cleanup
-rados bench –p test 300 seq
-----
-
-Once the tests are complete, you can remove the test pool via:
-
-----
-ceph tell mon.* injectargs --mon-allow-pool-delete=true
-ceph osd pool delete test test --yes-i-really-really-mean-it
-ceph tell mon.* injectargs --mon-allow-pool-delete=false
-----
-
-=== Deployment Considerations
-Some final considerations before deploying your own version of a SUSE Enterprise Storage cluster, based on Ceph. As previously stated, please refer to the Administration and Deployment Guide.
-
-* With the default replication setting of 3, remember that the client-facing network will have about half or less of the traffic of the backend network. This is especially true when component failures occur or rebalancing happens on the OSD nodes. For this reason, it is important not to under provision this critical cluster and service resource.
-* It is important to maintain the minimum number of monitor nodes at three. As the cluster increases in size, it is best to increment in pairs, keeping the total number of Mon nodes as an odd number. However, only very large or very distributed clusters would likely need beyond the 3 MON nodes cited in this reference implementation. For performance reasons, it is recommended to use distinct nodes for the MON roles, so that the OSD nodes can be scaled as capacity requirements dictate.
-* As described in this implementation guide and the SUSE Enterprise Storage documentation, a minimum of four OSD nodes is recommended, with the default replication setting of 3. This will ensure cluster operation, even with the loss of a complete OSD node. Generally speaking, performance of the overall cluster increases as more properly configured OSD nodes are added.
-
-== Conclusion
-The {vendor} {vplatform} series represents a strong capacity-oriented platform.  When combined with the access flexibility and reliability of SUSE Enterprise Storage and the industry leading support from {vendor}, any business can feel confident in the ability to address the exponential growth in storage they are currently faced with.
+// Appendixes
+include::Appendix-BOM.adoc[]
+include::Appendix-policy.cfg.adoc[]
+include::Appendix-Performance-Data.adoc[]
