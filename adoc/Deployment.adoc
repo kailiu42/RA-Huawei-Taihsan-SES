@@ -1,46 +1,26 @@
 == Deployment
 This deployment section should be seen as a supplement online https://www.suse.com/documentation/[documentation]. Specifically, the https://www.suse.com/documentation/suse-enterprise-storage-5/book_storage_deployment/data/book_storage_deployment.html[SUSE Enterprise Storage 5 Deployment Guide] as well as https://www.suse.com/documentation/sles-12/book_sle_admin/data/book_sle_admin.html[SUSE Linux Enterprise Server Administration Guide]. It is assumed that a Subscription Management Tool server exists within the environment. If not, please follow the information in https://www.suse.com/documentation/sles-12/book_smt/data/book_smt.html[Subscription Management Tool (SMT) for SLES] to make one available. The emphasis is on specific design and configuration choices.
 
+In this document we use "example.com" as the domain name for the nodes, replace it with your real domain name in your own installation.
+
 === Network Deployment Overview
 The following considerations for the network configuration should be attended to:
 
 * Ensure that all network switches are updated with consistent firmware versions.
 ifeval::["{BondingType}" == "lacp"]
 * Configure 802.3ad for system port bonding between the switches, plus enable jumbo frames.
-* Specific configuration for this deployment can be found in Appendix C: Network Switch Configuration
-// FIXME Appendix
+* Specific configuration for this deployment can be found in <<appendix-switch>>
 endif::[]
-* Network IP addressing and IP ranges need proper planning. In optimal environments, a single storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, single subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current as well as future growth should be taken into consideration.
+* Network IP addressing and IP ranges need proper planning. In optimal environments, a dedicated storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, dedicated subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current as well as future growth should be taken into consideration.
 * Setup DNS A records for all nodes. Decide on subnets and VLANs and configure the switch ports accordingly.
+* Always use the same type (short or full) of hostname every where, for salt master/minion etc.
 * Ensure that you have access to a valid, reliable NTP service, as this is a critical requirement for all nodes. If not, it is recommended to use the admin node.
 
 === Hardware Recommended Actions
 The following considerations for the hardware platforms should be attended to:
 
-* Ensure Boot Mode is set to UEFI for all the physical nodes that comprise the SUSE Enterprise Storage Cluster.
-* Verify BIOS/uEFI level on the physical servers correspond to those on the SUSE YES certification for all the platforms.
-* Configure the boot media as RAID-1
-* Configure all data and journal devices as individual RAID-0
-
-ifeval::[{MellanoxCX4Present} == 1]
-==== Set ConnectX-4 VPI NICS to Ethernet Mode
-This configuration includes Mellanox ConnectX-4 VPI Network Interface Cards. These cards often arrive in Infiniband mode and need to be set to Ethernet mode. The way to affect this change involves following the steps outlined in the http://www.mellanox.com/pdf/prod_software/SUSE_Linux_Enterprise_Server_(SLES)_12_SP3_Driver_User_Manual.pdf[Mellanox manual for the inbox driver on SUSE Linux Enterprise 12 SP3].
-
-_Replace the bold string with your PCI ID's_
-
-The steps required are:
-[subs="attributes,quotes"]
-----
-# zypper in mstflint
-# lspci |grep Mellanox
-# mstconfig -d **_Your_PCI_ID_** s LINK_TYPE_P1=ETH
-# mstconfig -d **_Your_PCI_ID_** s LINK_TYPE_P2=ETH
-# reboot
-----
-[[img-NICmode]]
-.Change Mellanox ConnectX-4 VPI NIC Mode
-image::ConnectX-4_NIC_mode.png[NIC Mode Change,align=center]
-endif::[]
+* Configure the boot media as RAID-1.
+* Configure all data and journal devices as individual RAID-0 if RAID controllers with hardware write cache are configured.
 
 === Operating System Installation
 There are several key tasks to ensure are performed correctly during the operating system installation. During the SUSE Linux Enterprise installation, be sure and register the system with an update server. Ideally, this is a local SMT server which will reduce the time required for updates to be downloaded and applied to all nodes. By updating the nodes during installation, the system will deploy with the most up-to-date packages available, helping to ensure the best experience possible.
@@ -49,123 +29,253 @@ To speed installation, on the System Role screen, it is suggested to select KVM 
 
 The next item is to ensure that the operating system is installed on the correct device. Especially on OSD nodes, the system may not choose the right drive by default. The proper way to ensure the right device is being used is to select *Create Partition Setup* on the Suggested Partitioning screen. This will then display a list of devices, allowing selection of the correct boot device. Next select *Edit Proposal Settings* and unselect the *Propose Separate Home Partition* checkbox.
 
-Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster.
+Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster. And keep in mind that the NTP service is not designed to be run on an virtualized environment, so make sure the NTP server been used is an physical machine or it may cause strange clock drifting problem.
 
 === SUSE Enterprise Storage Installation & Configuration
-==== Software Deployment configuration (Deepsea and Salt)
+.Software Deployment configuration (Deepsea and Salt)
 Salt, along with DeepSea, is a stack of components that help deploy and manage server infrastructure. It is very scalable, fast, and relatively easy to get running.
 
 There are three key Salt imperatives that need to be followed:
 
 * The Salt Master is the host that controls the entire cluster deployment. Ceph itself should NOT be running on the master as all resources should be dedicated to Salt master services. In our scenario, we used the Admin host as the Salt master.
 * Salt minions are nodes controlled by Salt master. OSD, monitor, and gateway nodes are all Salt minions in this installation.
-* Salt minions need to correctly resolve the Salt master’s host name over the network. This can be achieved through configuring unique host names per interface (eg osd1-cluster.suse.lab and osd1-public.suse.lab) in DNS and/or local /etc/hosts files.
+* Salt minions need to correctly resolve the Salt master’s host name over the network. This can be achieved through configuring unique host names per interface (eg osd1-cluster.example.com and osd1-public.example.com) in DNS and/or local /etc/hosts files.
 
 Deepsea consists of series of Salt files to automate the deployment and management of a Ceph cluster. It consolidates the administrator’s decision making in a single location around cluster assignment, role assignment and profile assignment. Deepsea collects each set of tasks into a goal or stage.
 
 The following steps, performed in order, will be used for this reference implementation:
 
+==== Prepare all nodes
 . Install DeepSea on the Salt master which is the Admin node:
 +
 ----
-zypper in deepsea
+zypper in salt-master
 ----
 +
+
 . Start the salt-master service and enable:
 +
 ----
-systemctl start salt-master.service
-systemctl enable salt-master.service
+systemctl enable --now salt-master.service
 ----
 +
+
 . Install the salt-minion on all cluster nodes (including the Admin):
 +
 ----
 zypper in salt-minion
 ----
 +
+
 . Configure all minions to connect to the Salt master:
 +
 Modify the entry for master in the _/etc/salt/minion_
 +
 ----
-master: sesadmin.domain.com
+master: sesadmin.example.com
 ----
 +
-.	Start the salt-minion service and enable:
+
+. Restart the salt-minion service and enable it:
 +
 ----
-systemctl start salt-minion.service
+systemctl restart salt-minion.service
 systemctl enable salt-minion.service
 ----
 +
-.	List and accept all Salt keys on the Salt master: salt-key --accept-all and verify their acceptance
+
+. List Salt fingerprints on all the minions:
 +
 ----
+salt-call --local key.finger
+----
++
+
+. List all minion fingerprints on the Salt master, verify them against the fingerprints on each minions to make sure they all match. If they do, accept all Salt keys on the Salt master:
++
+----
+salt-key -F
 salt-key --list-all
 salt-key –-accept-all
 ----
 +
-.	If the OSD nodes were used in a prior installation, zap ALL the OSD disks (ceph-disk zap <DISK>)
-+
-.	At this point, you can deploy and configure the cluster:
-..	Prepare the cluster:
+
+. Verify if Salt works properly by "ping" each minions. They should all return True on success:
 +
 ----
-salt-run state.orch ceph.stage.prep
+salt '*' test.ping
+----
+
+==== Prepare OSD disks on OSD nodes
+If the OSD nodes were used in a prior installation, zap ALL the OSD disks first.
+
+IMPORTANT: This must be done on all the OSD disks that were used in a prior installation, or else the deployment will fail when activating OSDs.
+
+WARNING: Below commands should not be copied and executed on your installation blindly. The device names used below are just examples, you need to change them to match only the OSD disks in your own installation. Failed to use the correct device name may erase your OS disk or other disks that may hold valuable data.
+
+. Wipe the beginning of each partition:
++
+----
+for partition in /dev/sdX[0-9]*
+do
+  dd if=/dev/zero of=$partition bs=4096 count=1 oflag=direct
+done
 ----
 +
-..	Run the discover stage to collect data from all minions and create configuration fragments:
+
+. Wipe the partition table:
 +
 ----
-salt-run state.orch ceph.stage.disovery
+sgdisk -Z --clear -g /dev/sdX
 ----
 +
-..	A proposal for the storage layout needs to be generated at this time. For the hardware configuration used for this work, the following command was utilized:
+	
+. Wipe the backup partition tables:
 +
+----
+size=`blockdev --getsz /dev/sdX`
+position=$((size/4096 - 33))
+dd if=/dev/zero of=/dev/sdX bs=4M count=33 seek=$position oflag=direct
+----
+
+==== Install and configure Deepsea on Admin node
+. Install deepsea package on Admin node:
++
+----
+# zypper in deepsea
+----
++
+
+. Check _/srv/pillar/ceph/master_minion.sls_ for correctness.
+
+. Check _/srv/pillar/ceph/deepsea_minions.sls_ file, make sure the deepsea_minions option targets the correct nodes. In the usual case, it can simply be put like below to match all Salt minions in the cluster:
++
+----
+deepsea_minions: '*'
+----
++
+
+. Create _/srv/pillar/ceph/stack/ceph/cluster.yml_ [[create-cluster-yml,Create cluster.yml]] with below options: 
++
+----
+cluster_network: <net/mask of cluster network>
+public_network: <net/mask of public network>
+time_server: <Address of NTP server, if this line is omitted admin node will be used>
+----
+
+==== Deploy using Deepsea
+At this point Deepsea commands can be run to deploy the cluster.
+
+[TIP]
+====
+Each command can be run either as:
+----
+salt-run state.orch ceph.stage.<stage name>
+----
+
+Or:
+----
+deepsea stage run ceph.stage.<stage name>
+----
+
+The latter form is preferred as it outputs real time progress.
+====
+
+===== Stage 0: Prepare
+During this stage, all required updates are applied and your system may be rebooted.
+----
+deepsea stage run ceph.stage.0
+----
+
+IMPORTANT: If the Salt master reboots during Stage 0, you need to run Stage 0 again after it boots up.
+
+Optionally, create the /var/lib/ceph btrfs subvolume:
+----
+salt-run state.orch ceph.migrate.subvolume
+----
+
+===== Stage 1 Discovery
+During this stage, all hardware in your cluster are detected and necessary information are collected for the Ceph configuration.
+----
+deepsea stage run ceph.stage.1
+----
+
+NOTE: Configure cluster and public network in _/srv/pillar/ceph/stack/ceph/cluster.yml_ if not yet done as described in <<create-cluster-yml>>.
+
+Now a _/srv/pillar/ceph/proposals/policy.cfg_ file needs to be created to instruct Deepsea on the location and configuration files to use for the different components that make up the Ceph cluster (Salt master, admin, monitor, OSD and other roles).
+
+To do so, copy the example file to the right location then edit it to match your installation: 
+----
+cp /usr/share/doc/packages/deepsea/examples/policy.cfg-rolebased /srv/pillar/ceph/proposals/policy.cfg
+----
+
+TIP: See <<appendix-policy-cfg>> for the one used when installing the cluster described in this document.
+
+A proposal for the storage layout needs to be generated at this time. For the hardware configuration used for this work, the following command was utilized:
 ----
 salt-run proposal.populate name=apollo ratio=9 wal=740-770 db=740-770 target='osd*' db-size=40g wal-size=5g data=5000-7000
 ----
-+
 
-+
 The result of the above command is a deployment proposal for the disks that uses devices with a reported size of five to six terabytes for data and establishes a 5GB write-ahead log partition and a 40GB database partition for each spinner on one of the SSDs in a ratio of 9 spinners to each SSD.
 
+[TIP]
+====
+You may need to play with the proposal population command with different arguments for several times to get what you really want.
 
-..	A _/srv/pillar/ceph/proposals/policy.cfg_ file needs to be created to instruct Salt on the location and configuration files to use for the different components that make up the Ceph cluster (Salt master, admin, monitor, and OSDs).
-***	See Appendix B for the _policy.cfg_ file used in the installation.
+To print the help text about the various arguments proposal command accepts:
+----
+salt-run proposal.help
+----
 
-..	Next, proceed with the configuration stage to parse the _policy.cfg_ file and merge the included files into the final form
-+
+To show the generated proposal on screen according to the arguments passed:
 ----
-salt-run state.orch ceph.stage.configure
+salt-run proposal.peek <arguments>
 ----
-+
-..	The last two steps manage the actual deployment.
-+
-Deploy monitors and ODS daemons first:
-+
+
+To write the proposal to the _/srv/pillar/ceph/proposals_ subdirectory:
 ----
-salt-run state.orch ceph.stage.deploy
+salt-run proposal.populate <arguments> name=myprofile
 ----
-+
-NOTE: The command can take some time to complete, depending on the size of the cluster.
-+
-..	Check for successful completion via:
-+
+Pass "name=myprofile" to the command to name the storage profile. This will result in a "profile-myprofile" subdirectory been created to save the new proposal.
+====
+
+===== Stage 2 Configure
+During this stage necessary configuration data are prepared in particular format.
 ----
-ceph –s
+deepsea stage run ceph.stage.2
 ----
-+
-..	Finally, deploy the services-gateways (iSCSI, RADOS, and openATTIC to name a few):
-+
+
+[TIP]
+====
+Use below command to check the attributes of each node:
 ----
-salt-run state.orch ceph.stage.services
+salt 'ceph_minion*' pillar.items
 ----
+====
+
+===== Stage 3 Deploy
+A basic Ceph cluster with mandatory Ceph services is created.
+----
+deepsea stage run ceph.stage.3
+----
+
+NOTE: It may take quite some time for above command to finish if your cluster is large, or your Internet bandwidth is limited while you didn't register the nodes to local SMT server.
+
+After the above command is finished successfully, check whether the cluster is up by running:
+----
+ceph -s
+----
+
+
+===== Stage 4 Services
+Additional features of Ceph like iSCSI, Object Gateway and CephFS can be installed in this stage. Each is optional and up to your situation. 
+----
+deepsea stage run ceph.stage.4
+----
+
 
 === Post-deployment quick test
 The steps below can be used (regardless of the deployment method) to validate the overall cluster health:
-
 ----
 ceph status
 ceph osd pool create test 1024
@@ -174,7 +284,6 @@ rados bench –p test 300 seq
 ----
 
 Once the tests are complete, you can remove the test pool via:
-
 ----
 ceph tell mon.* injectargs --mon-allow-pool-delete=true
 ceph osd pool delete test test --yes-i-really-really-mean-it

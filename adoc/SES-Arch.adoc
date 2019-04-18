@@ -6,7 +6,7 @@ SUSE Enterprise Storage provides unified block, file, and object access based on
 
 Ceph supports both native and traditional client access. The native clients are aware of the storage topology and communicate directly with the storage daemons over the public network, resulting in horizontally scaling performance. Non-native protocols, such as ISCSI, S3, and NFS require the use of gateways. While these gateways may be thought of as a limiting factor, the iSCSI and S3 gateways can scale horizontally using load balancing techniques.
 
-[#img-ses-arch]
+[[img-ses-arch]]
 .SES Architecture
 image::SES-Reference-Architecture.png[SES Architecture,align=center,pdfwidth=100%,scaledwidth=100%]
 
@@ -27,6 +27,6 @@ A software-defined solution is only as reliable as its slowest and least redunda
 
 <<img-ceph-network>> shows the logical layout of the traditional Ceph cluster implementation.
 
-[#img-ceph-network]
+[[img-ceph-network]]
 .Ceph Network Architecture
 image::Ceph-Network.png[Ceph Network Architecture,align=center,pdfwidth=100%,scaledwidth=100%]

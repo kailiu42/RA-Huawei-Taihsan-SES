@@ -1,0 +1,17 @@
+[appendix]
+[[appendix-switch]]
+== Network Switch Configuration
+
+Below are the commands used to configure the {switchVendor} {switchModel} switch for 802.3ad link aggregation.
+----
+port link-type trunk
+mode lacp-static
+load-balance src-dst-ip
+local-preference disable
+----
+ 
+
+In the OS bonding configuration, make sure below options are set:
+----
+BONDING_MODULE_OPTS='mode=802.3ad miimon=100 lacp_rate=fast xmit_hash_policy=layer3+4'
+----
