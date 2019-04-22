@@ -5,19 +5,17 @@
 |===
 |Role |Qty |Component |Notes
 
-|{node2Roles}
-|4
-|{vendor} {vPlatform} {node2Model}
-a| Each node consists of:
+|Admin Node
+|1
+|A VM on a Huawei x86 machine
+a| The node consists of:
 
-* {node2CPUCount}x {node2CPUModel}
-* {node2RAM}
-* 1x {node2CPUModel} Integrated SAS Controller
-* 2x 300GB SAS HDD for OS
-* 1x {node2CPUModel} Embedded Network Controller - 1GbE Dual Port
-* 1x {node2CPUModel} Embedded Network Controller - 10GbE Dual Port (not used)
+* 8x vCPU cores
+* 64GB RAM
+* 100GB virtual disk for OS
+* 2x virtual NIC port to public and cluster network
 
-|OSD Hosts
+|OSD hosts, MON, MGR shared the OSD hosts
 |4
 |{vendor} {vPlatform} {OSDModel}
 a| Each node consists of:
@@ -28,8 +26,7 @@ a| Each node consists of:
 * 2x 300GB SAS HDD for OS
 * 34x 4TB 7.2k SATA HDD for OSD
 * 2x {vendor} 1TB NVMe SSD for db and journal
-* 1x {node2CPUModel} Embedded Network Controller - 1GbE Dual Port
-* 1x {node2CPUModel} Embedded Network Controller - 10GbE Dual Port
+* 1x {node2CPUModel} Embedded Network Controller - 1GbE Quad Port
 * 1x Dual Port Intel 82599 10Gb Ethernet adapter
 
 |Software
