@@ -1,17 +1,7 @@
 [appendix]
+[[appendix-policy-cfg]]
 == policy.cfg
-[#policy.cfg]
-[source]
+[source,yaml]
 ----
-cluster-ceph/cluster/*.sls
-role-master/cluster/salt*.sls
-role-admin/cluster/salt*.sls
-role-mon/cluster/mon*.sls
-role-mgr/cluster/mon*.sls
-role-mds/cluster/mon*.sls
-role-openattic/cluster/salt*.sls
-config/stack/default/global.yml
-config/stack/default/ceph/cluster.yml
-profile-apollo/cluster/*.sls
-profile-apollo/stack/default/ceph/minions/*.yml
+include::examples/policy.cfg[]
 ----
