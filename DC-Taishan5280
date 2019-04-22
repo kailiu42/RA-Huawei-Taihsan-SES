@@ -1,4 +1,4 @@
-MAIN="Taishan5280.adoc"
+MAIN="MAIN.adoc"
 ADOC_IMG_DIR="adoc/images"
 ADOC_TYPE="book"
 ADOC_POST="yes"
