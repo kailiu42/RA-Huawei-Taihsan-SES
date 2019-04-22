@@ -1,2 +1,198 @@
 [appendix]
 == Performance Data
+Comprehensive performance baselines are run as part of a reference build activity. This activity yields a vast amount of information that may be used to approximate the size and performance of the solution. The only tuning applied is documented in the implementation portion of this document.
+
+The tests are comprised of a number of Flexible I/O (fio) job files run against multiple worker nodes. The job files and testing scripts may be found for review at: https://github.com/dmbyte/benchmaster. This is a personal repository and no warranties are made in regard to the fitness and safety of the scripts found there.
+
+The testing methodology involves two different types of long running tests. The types and duration of the tests have very specific purposes. There are both I/O simulation jobs and single metric jobs.
+
+The length of the test run, in combination with the ramp-up time specified in the job file, is intended to allow the system to overrun caches. This is a worst-case scenario for a system and would indicate that it is running at or near capacity. Given that few applications can tolerate significant amounts of long tail latencies, the job files have specific latency targets assigned. These targets are intended to be in-line with expectations for the type of I/O operation being performed and set realistic expectations for the application environment.
+
+The latency target, when combined with the latency window and latency window percentage set the minimum number of I/Os that must be within the latency target during the latency window time period. For most of the tests, the latency target is 20ms of less. The latency window is five seconds and the latency target is 99.99999%. The way that fio uses this is to ramp up the queue depth at each new latency window boundary until more than .00001% of all I/O's during a five second window are higher than 20ms. At that point, fio backs the queue depth down where the latency target is sustainable.
+
+In the figures below, the x-axis labels indicate the block size in KiB on the top line and the data protection scheme on the bottom line. 3xRep is indicative of the Ceph standard 3 replica configuration for data protection while EC2+2 is Erasure Coded using the ISA plugin with k=2 and m=2. The Erasure Coding settings were selected to fit within the minimum cluster hardware size supported by SUSE.
+
+These settings, along with block size, max queue depth, jobs per node, etc., are all visible in the job files found at the repository link above.
+
+Load testing was provided by for additional {vendor} x86 servers on the same 10GbE network
+
+=== Sequential Writes
+Sequential write I/O testing was performed across block sizes ranging from 4KiB to 4MiB.
+
+These tests have latency targets associated. 4K is 10ms, 64K is 20ms, 1MiB is 100ms, and 4MiB is 300ms.
+
+.CephFS Sequential Writes
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms)
+|3xRep |4K |26 |6896.3 |9.2
+|EC2+2 |4K |6 |1759.6 |36.5
+|3xRep |64K |99 |1587.9 |41.0
+|EC2+2 |64K |79 |1268.9 |50.5
+|3xRep |1M |624 |624.3 |103.4
+|EC2+2 |1M |454 |454.8 |139.7
+|3xRep |4M |977 |244.3 |262.2
+|EC2+2 |4M |826 |206.6 |306.0
+|===
+
+.RBD Sequential Writes
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms)
+|3xRep |4K |34 |8720.2 |7.2
+|EC2+2 |4K |5 |1299.3 |51.4
+|3xRep |64K |143 |2297.6 |27.8
+|EC2+2 |64K |65 |1049.3 |60.4
+|3xRep |1M |228 |228.0 |69.9
+|EC2+2 |1M |121 |121.4 |131.5
+|3xRep |4M |1076 |269.1 |233.0
+|EC2+2 |4M |732 |183.2 |344.9
+|===
+
+=== Sequential Reads
+The sequential read tests were conducted across the same range of block sizes as the write testing. The latency targets are only present for 4k sequential reads, where it is set to 10ms.
+
+.CephFS Sequential Reads
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep |4K |212 |54480.6 |1.2
+|EC2+2 |4K |31 |8077.4 |2.0
+|3xRep |64K |2369 |37912.0 |54.2
+|EC2+2 |64K |2077 |33234.7 |42.5
+|3xRep |1M |1740 |1739.4 |1079.4
+|EC2+2 |1M |1483 |1482.3 |1357.2
+|3xRep |4M |2475 |617.9 |2897.8
+|EC2+2 |4M |3124 |780.2 |2560.1
+|===
+
+.RBD Sequential Reads
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep |4K |45 |11548.5 |1.4
+|EC2+2 |4K |80 |20667.4 |1.5
+|3xRep |64K |1661 |26582.4 |19.3
+|EC2+2 |64K |1894 |30307.0 |61.8
+|3xRep |1M |3595 |3654.1 |526.6
+|EC2+2 |1M |611 |611.5 |801.9
+|3xRep |4M |4384 |1095.1 |1634.2
+|EC2+2 |4M |7887 |1970.8 |2120.1
+|===
+
+=== Random Writes
+Random write tests were performed with the smaller I/O sizes of 4k and 64k. The 4k tests have a latency target of 10ms and the 64k tests have a latency target of 20ms.
+
+.CephFS Random Writes
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms)
+|3xRep |4 |14 |3635.6 |17.6
+|EC2+2 |4 |4 |1107.3 |57.8
+|3xRep |64 |104 |1666.9 |38.0
+|EC2+2 |64 |59 |958.5 |66.8
+|===
+
+.RBD Random Writes
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms)
+|3xRep |4 |10 |2606.4 |24.7
+|EC2+2 |4 |3 |952.7 |67.0
+|3xRep |64 |142 |2286.6 |27.8
+|EC2+2 |64 |50 |802.8 |79.7
+|===
+
+=== Random Reads
+The random read tests were conducted on both 4K and 64K I/O sizes with latency targets of 10ms and 20ms respectively.
+
+.CephFS Random Reads
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep |4K |20 |5235.5 |12.2
+|EC2+2 |4K |9 |2543.5 |25.1
+|3xRep |64K |282 |4522.5 |14.1
+|EC2+2 |64K |131 |2111.1 |30.3
+|===
+
+.RBD Random Reads
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |I/O Size |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep |4K |6 |1719.7 |9.3
+|EC2+2 |4K |19 |5007.9 |12.9
+|3xRep |64K |75 |1206.7 |13.3
+|EC2+2 |64K |239 |3828.7 |16.7
+|===
+
+=== Backup/Recovery Simulations
+The following test results are workload oriented.
+
+.Backup
+The backup simulation test attempts to simulate the SUSE Enterprise Storage cluster being used as a disk-based backup target that is either hosting file systems on RBDs or is using CephFS. The test had a latency target of 200ms at the time of the test run. The latency target has since been removed.
+
+.Backup Simulation
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |Protocol |IO Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms)
+|3xRep | CephFS |64M |881 |12.7 |160976.1
+|EC2+2 | CephFS |64M |982 |14.3 |138143.5
+|3xRep | RBD |64M |1038 |15.2 |167619.1
+|EC2+2 | RBD |64M |887 |12.8 |182757.4
+|===
+
+.Recovery
+The recovery workload is intended to simulate recovery jobs being run from SUSE Enterprise Storage. It tests both RBD and CephFS.
+
+.Recovery Simulation
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |Protocol |IO Size |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep | CephFS |64M |2494 |37.9 |52540.2
+|EC2+2 | CephFS |64M |2770 |42.2 |54579.5
+|3xRep | RBD |64M |1327 |20.5 |23828.8
+|EC2+2 | RBD |64M |2330 |35.5 |58883.9
+|===
+
+=== KVM Virtual Guest Simulation
+The kvm-krbd test roughly simulates virtual machines running. This test has a 20ms latency target and is 80% read with both reads and writes being random.
+
+.VM Simulation
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |Protocol |IO Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms) |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep | CephFS |4K |3 |960.2 |14.4 |15 |3856.5 |13.1
+|EC2+2 | CephFS |4K |1 |264.9 |70.7 |4 |1084.0 |42.2
+|3xRep | RBD |4K |1 |271.9 |11.0 |4 |1099.9 |11.8
+|EC2+2 | RBD |4K |1 |325.1 |67.1 |5 |1307.9 |28.6
+|===
+
+=== Database Simulations
+It is important to keep sight of the fact that Ceph is not designed for high performance database activity. These tests provide a baseline understanding of performance expectations should a database be deployed using SUSE Enterprise Storage.
+
+.OLTP Database Log
+The database log simulation is based on documented I/O patterns from several major database vendors. The I/O profile is 80% sequential 8KB writes with a latency target of 1ms.
+
+.OLTP Log
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |Protocol |IO Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms) |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep | CephFS |8K |33 |4312.5 |15.2 |8 |1077.8 |2.3
+|EC2+2 | CephFS |8K |9 |1239.4 |45.9 |2 |306.8 |19.2
+|3xRep | RBD |8K |12 |1616.0 |9.6 |3 |406.3 |1.1
+|EC2+2 | RBD |8K |8 |1083.8 |51.7 |2 |270.5 |19.7
+|===
+
+.OLTP Database Datafile
+The OLTP Datafile simulation is set for an 80/20 mix of random reads and writes. The latency target is 10ms.
+
+.OLTP Data
+[options=header,frame=topbot,grid=rows]
+|===
+|Data Protection |Protocol |IO Size |Write BW (MiB/s) |Write IOPS |Write Avg Latency (ms) |Read BW (MiB/s) |Read IOPS |Read Avg Latency (ms)
+|3xRep | CephFS |8K |6 |864.3 |17.0 |27 |3462.6 |14.1
+|EC2+2 | CephFS |8K |2 |307.4 |64.3 |9 |1240.7 |35.9
+|3xRep | RBD |8K |2 |263.7 |12.6 |8 |1064.0 |11.9
+|EC2+2 | RBD |8K |3 |385.1 |64.2 |12 |1553.1 |19.8
+|===
