@@ -1,7 +1,7 @@
 [appendix]
 == Bill of Materials
 
-[cols="2,1,3,6",options=header]
+[cols="2,1,3,6",options=header,frame=topbot,grid=rows]
 |===
 |Role |Qty |Component |Notes
 
