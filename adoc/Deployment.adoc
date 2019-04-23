@@ -1,7 +1,7 @@
 == Deployment
 This deployment section should be seen as a supplement online https://www.suse.com/documentation/[documentation]. Specifically, the https://www.suse.com/documentation/suse-enterprise-storage-5/book_storage_deployment/data/book_storage_deployment.html[SUSE Enterprise Storage 5 Deployment Guide] as well as https://www.suse.com/documentation/sles-12/book_sle_admin/data/book_sle_admin.html[SUSE Linux Enterprise Server Administration Guide]. It is assumed that a Subscription Management Tool server exists within the environment. If not, please follow the information in https://www.suse.com/documentation/sles-12/book_smt/data/book_smt.html[Subscription Management Tool (SMT) for SLES] to make one available. The emphasis is on specific design and configuration choices.
 
-In this document we use "example.com" as the domain name for the nodes, replace it with your real domain name in your own installation.
+In this document we use `example.com` as the domain name for the nodes, replace it with your real domain name in your own installation.
 
 === Network Deployment Overview
 The following considerations for the network configuration should be attended to:
@@ -213,14 +213,14 @@ TIP: See <<appendix-policy-cfg>> for the one used when installing the cluster de
 
 A proposal for the storage layout needs to be generated at this time. For the hardware configuration used for this work, the following command was utilized:
 ----
-salt-run proposal.populate name=apollo ratio=9 wal=740-770 db=740-770 target='osd*' db-size=40g wal-size=5g data=5000-7000
+salt-run proposal.populate
 ----
 
-The result of the above command is a deployment proposal for the disks that uses devices with a reported size of five to six terabytes for data and establishes a 5GB write-ahead log partition and a 40GB database partition for each spinner on one of the SSDs in a ratio of 9 spinners to each SSD.
+The proposal generator will automatically use hard disks for OSD storage and NVMe SSDs for BlueStore WAL and DB storage.
 
 [TIP]
 ====
-You may need to play with the proposal population command with different arguments for several times to get what you really want.
+On your own deployment you may need to play with the proposal generator with different arguments for several times to get what you really want.
 
 To print the help text about the various arguments proposal command accepts:
 ----
@@ -236,7 +236,7 @@ To write the proposal to the _/srv/pillar/ceph/proposals_ subdirectory:
 ----
 salt-run proposal.populate <arguments> name=myprofile
 ----
-Pass "name=myprofile" to the command to name the storage profile. This will result in a "profile-myprofile" subdirectory been created to save the new proposal.
+Pass the argument `name=myprofile` to the command to name the storage profile. This will result in a `profile-myprofile` subdirectory been created to store the new proposal files.
 ====
 
 ===== Stage 2 Configure
@@ -249,7 +249,7 @@ deepsea stage run ceph.stage.2
 ====
 Use below command to check the attributes of each node:
 ----
-salt 'ceph_minion*' pillar.items
+salt '*' pillar.items
 ----
 ====
 

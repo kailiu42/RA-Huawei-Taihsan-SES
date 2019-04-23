@@ -30,3 +30,20 @@ A software-defined solution is only as reliable as its slowest and least redunda
 [[img-ceph-network]]
 .Ceph Network Architecture
 image::Ceph-Network.png[Ceph Network Architecture,align=center,pdfwidth=100%,scaledwidth=100%]
+
+=== Network/IP Address Scheme
+Specific to this implementation, the following naming and addressing scheme were utilized.
+
+.Node Roles and Network Addresses
+[options=header,frame=topbot,grid=rows]
+|===
+|Role |Hostname |Public Network |Cluster Network
+|Admin |sesadmin.example.com |10.1.1.3 |N/A
+|Monitor |osd1.example.com |10.1.1.4 |N/A
+|Monitor |osd2.example.com |10.1.1.5 |N/A
+|Monitor |osd3.example.com |10.1.1.6 |N/A
+|OSD Node |osd1.example.com |10.1.1.4 |10.2.1.4
+|OSD Node |osd2.example.com |10.1.1.5 |10.2.1.5
+|OSD Node |osd3.example.com |10.1.1.6 |10.2.1.6
+|OSD Node |osd4.example.com |10.1.1.7 |10.2.1.7
+|===
