@@ -12,7 +12,7 @@
 :OSDDriveDesc: Hard Disk
 :node2Roles: Admin, monitor, and protocol gateways
 :node2Model: 2280
-:node2YESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997
+:node2YESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997
 :node2CPUModel: HiSilicon 1616
 :node2CPUCount: 1
 :node2RAM: 32GB
