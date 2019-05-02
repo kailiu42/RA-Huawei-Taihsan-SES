@@ -195,7 +195,7 @@ salt-run state.orch ceph.migrate.subvolume
 ----
 
 ===== Stage 1 Discovery
-During this stage, all hardware in your cluster are detected and necessary information are collected for the Ceph configuration.
+During this stage, all hardware in your cluster is detected and necessary information are collected for the Ceph configuration.
 ----
 deepsea stage run ceph.stage.1
 ----
@@ -295,4 +295,5 @@ Some final considerations before deploying your own version of a SUSE Enterprise
 
 * With the default replication setting of 3, remember that the client-facing network will have about half or less of the traffic of the backend network. This is especially true when component failures occur or rebalancing happens on the OSD nodes. For this reason, it is important not to under provision this critical cluster and service resource.
 * It is important to maintain the minimum number of monitor nodes at three. As the cluster increases in size, it is best to increment in pairs, keeping the total number of Mon nodes as an odd number. However, only very large or very distributed clusters would likely need beyond the 3 MON nodes cited in this reference implementation. For performance reasons, it is recommended to use distinct nodes for the MON roles, so that the OSD nodes can be scaled as capacity requirements dictate.
+* Although in this specific implementation monitors were deployed on the OSD nodes due to shortage of equipment, ideally monitors should be deployed on dedicated nodes.
 * As described in this implementation guide and the SUSE Enterprise Storage documentation, a minimum of four OSD nodes is recommended, with the default replication setting of 3. This will ensure cluster operation, even with the loss of a complete OSD node. Generally speaking, performance of the overall cluster increases as more properly configured OSD nodes are added.
