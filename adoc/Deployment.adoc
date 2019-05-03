@@ -13,7 +13,7 @@ ifeval::["{BondingType}" == "lacp"]
 endif::[]
 * Network IP addressing and IP ranges need proper planning. In optimal environments, a dedicated storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, dedicated subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current as well as future growth should be taken into consideration.
 * Setup DNS A records for all nodes. Decide on subnets and VLANs and configure the switch ports accordingly.
-* Always use the same type (short or full) of hostname every where, for salt master/minion etc.
+* Always use the same type (short or full) of hostname every where, for Salt master/minions etc.
 * Ensure that you have access to a valid, reliable NTP service, as this is a critical requirement for all nodes. If not, it is recommended to use the admin node.
 
 === Hardware Recommended Actions
@@ -32,7 +32,7 @@ The next item is to ensure that the operating system is installed on the correct
 Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster. And keep in mind that the NTP service is not designed to be run on an virtualized environment, so make sure the NTP server been used is an physical machine or it may cause strange clock drifting problem.
 
 === SUSE Enterprise Storage Installation & Configuration
-.Software Deployment configuration (Deepsea and Salt)
+==== Software Deployment Configuration (Deepsea and Salt)
 Salt, along with DeepSea, is a stack of components that help deploy and manage server infrastructure. It is very scalable, fast, and relatively easy to get running.
 
 There are three key Salt imperatives that need to be followed:
@@ -45,7 +45,7 @@ Deepsea consists of series of Salt files to automate the deployment and manageme
 
 The following steps, performed in order, will be used for this reference implementation:
 
-==== Prepare all nodes
+==== Prepare All Nodes
 . Install DeepSea on the Salt master which is the Admin node:
 +
 ----
@@ -106,7 +106,7 @@ salt-key –-accept-all
 salt '*' test.ping
 ----
 
-==== Prepare OSD disks on OSD nodes
+==== Prepare OSD Disks on OSD Nodes
 If the OSD nodes were used in a prior installation, zap ALL the OSD disks first.
 
 IMPORTANT: This must be done on all the OSD disks that were used in a prior installation, or else the deployment will fail when activating OSDs.
@@ -138,7 +138,7 @@ position=$((size/4096 - 33))
 dd if=/dev/zero of=/dev/sdX bs=4M count=33 seek=$position oflag=direct
 ----
 
-==== Install and configure Deepsea on Admin node
+==== Install and Configure Deepsea on Admin Node
 . Install deepsea package on Admin node:
 +
 ----
@@ -163,7 +163,7 @@ public_network: <net/mask of public network>
 time_server: <Address of NTP server, if this line is omitted admin node will be used>
 ----
 
-==== Deploy using Deepsea
+==== Deploy Using Deepsea
 At this point Deepsea commands can be run to deploy the cluster.
 
 [TIP]
@@ -194,7 +194,7 @@ Optionally, create the /var/lib/ceph btrfs subvolume:
 salt-run state.orch ceph.migrate.subvolume
 ----
 
-===== Stage 1 Discovery
+===== Stage 1: Discovery
 During this stage, all hardware in your cluster is detected and necessary information are collected for the Ceph configuration.
 ----
 deepsea stage run ceph.stage.1
@@ -239,7 +239,7 @@ salt-run proposal.populate <arguments> name=myprofile
 Pass the argument `name=myprofile` to the command to name the storage profile. This will result in a `profile-myprofile` subdirectory been created to store the new proposal files.
 ====
 
-===== Stage 2 Configure
+===== Stage 2: Configure
 During this stage necessary configuration data are prepared in particular format.
 ----
 deepsea stage run ceph.stage.2
@@ -253,7 +253,7 @@ salt '*' pillar.items
 ----
 ====
 
-===== Stage 3 Deploy
+===== Stage 3: Deploy
 A basic Ceph cluster with mandatory Ceph services is created.
 ----
 deepsea stage run ceph.stage.3
@@ -267,14 +267,14 @@ ceph -s
 ----
 
 
-===== Stage 4 Services
+===== Stage 4: Services
 Additional features of Ceph like iSCSI, Object Gateway and CephFS can be installed in this stage. Each is optional and up to your situation. 
 ----
 deepsea stage run ceph.stage.4
 ----
 
 
-=== Post-deployment quick test
+=== Post-deployment Quick Tests
 The steps below can be used (regardless of the deployment method) to validate the overall cluster health:
 ----
 ceph status

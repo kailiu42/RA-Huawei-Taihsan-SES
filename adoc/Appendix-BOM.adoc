@@ -7,7 +7,7 @@
 
 |Admin Node
 |1
-|A VM on a Huawei x86 machine
+|A VM on a {vendor} x86 machine
 a| The node consists of:
 
 * 8x vCPU cores

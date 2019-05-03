@@ -26,7 +26,7 @@
 
 = SUSE(R) Enterprise Storage on {vendor} {vPlatform} Implementation Guide
 Kai Liu <kai.liu@suse.com>
-v1.0, April 15 2019: First edition
+v1.0, May 2 2019: First edition
 
 // Introductions, target audience and hw&sw configuration
 include::Introduction.adoc[]

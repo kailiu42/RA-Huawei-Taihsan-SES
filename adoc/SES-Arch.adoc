@@ -13,7 +13,7 @@ image::SES-Reference-Architecture.png[SES Architecture,align=center,pdfwidth=100
 In addition to the required network infrastructure, the minimum SUSE Enterprise Storage cluster comprises of a minimum of one administration server (physical or virtual), four object storage device nodes (OSDs), and three monitor nodes (MONs).
 
 .Specific to this implementation:
- * One system is deployed as the administrative host server. The administration host is the Salt-master and hosts the SUSE Enterprise Storage Administration Interface, openATTIC, which is the central management system which supports the cluster.
+ * One system is deployed as the administrative host server. The administration host is the Salt master and hosts the SUSE Enterprise Storage Administration Interface, openATTIC, which is the central management system which supports the cluster.
  * Three systems are deployed as monitor (MONs) nodes. Monitor nodes maintain information about the cluster health state, a map of the other monitor nodes and a CRUSH map. They also keep history of changes performed to the cluster.
  * It is strongly recommended to deploy monitors and other services on dedicated nodes. However due to shortage of equipment the monitors were deployed on the OSD nodes in this specific reference setup.
  * Additional servers may be deployed as iSCSI gateway nodes. iSCSI is a storage area network (SAN) protocol that allows clients (called initiators) to send SCSI command to SCSI storage devices (targets) on remote servers. This protocol is utilized for block-based connectivity to environments such as Microsoft Windows, VMware, and traditional UNIX. These systems may be scaled horizontally through client usage of multi-path technology.

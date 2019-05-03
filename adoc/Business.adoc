@@ -3,11 +3,11 @@
 SUSE Enterprise Storage delivers a highly scalable, resilient, self-healing storage system designed for large scale environments ranging from hundreds of Terabytes to Petabytes. This software defined storage product can reduce IT costs by leveraging industry standard servers to present unified storage servicing block, file, and object protocols. Having storage that can meet the current needs and requirements of the data center while supporting topologies and protocols demanded by new web-scale applications, enables administrators to support the ever-increasing storage requirements of the enterprise with ease.
 
 === {vendor} {vPlatform}
-Huawei Taishan servers provide a cost effective and scalable platform for the deployment of SUSE Enterprise Storage. These platforms unlocks the full potential of the Kunpeng CPU, raising the bar of SPECint benchmark by 25%, with up to 128 cores, 32 DDR4 DIMMs, PCIe 4.0, CCIX, and 100 GE LOM.
+{vendor} {vPlatform} servers provide a cost effective and scalable platform for the deployment of SUSE Enterprise Storage. These platforms unlocks the full potential of the Kunpeng CPU, raising the bar of SPECint benchmark by 25%, with up to 128 cores, 32 DDR4 DIMMs, PCIe 4.0, CCIX, and 100 GE LOM.
 
-Taishan servers are powered by 64-bit ARMv8 Hi1616 processors, each with 32 cores of 2.4 GHz frequency. They support diverse interfaces such as PCIe 3.0, 10GE, and SAS/SATA, and integrate high performance with low power consumption.
+{vPlatform} servers are powered by 64-bit ARMv8 Hi1616 processors, each with 32 cores of 2.4 GHz frequency. They support diverse interfaces such as PCIe 3.0, 10GE, and SAS/SATA, and integrate high performance with low power consumption.
 
-Featuring models tailored for computing, storage, or balanced needs, TaiShan is perfect for demanding workloads such as big data analytics, database acceleration, high-performance computing, cloud services, and native mobile applications. TaiShan servers empower data centers with the ultimate efficiency.
+Featuring models tailored for computing, storage, or balanced needs, {vPlatform} is perfect for demanding workloads such as big data analytics, database acceleration, high-performance computing, cloud services, and native mobile applications. {vPlatform} servers empower data centers with the ultimate efficiency.
 
 === Business Problem 
 Customers of all sizes face a major storage challenge: While the overall cost per Terabyte of physical storage has gone down over the years, a data growth explosion took place driven by the need to access and leverage new data sources (ex: external sources such as social media) and the ability to "manage" new data types (ex: unstructured or object data). These ever increasing "data lakes" need different access methods: File, block, or object.
