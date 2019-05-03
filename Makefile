@@ -6,7 +6,9 @@ ADOCS = $(wildcard adoc/*.adoc)
 
 IMAGES = $(wildcard adoc/images/*)
 
-SRCS = $(ADOCS) $(IMAGES)
+EXAMPLES = $(wildcard adoc/examples/*)
+
+SRCS = $(ADOCS) $(IMAGES) $(EXAMPLES)
 
 .PHONY : all clean pdf html html-single check-file check-link check-spell check
 
