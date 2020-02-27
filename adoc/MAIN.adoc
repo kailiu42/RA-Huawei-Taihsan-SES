@@ -1,3 +1,6 @@
+// Translation for AsciiDoctor built-in attributes/labels
+include::../asciidoctor/data/locale/attributes.adoc[]
+
 //Fill in the following variables to rapidly populate this document template
 :SESVersion: v5.5
 :SLESVersion: 12 SP3

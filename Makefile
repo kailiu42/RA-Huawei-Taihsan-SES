@@ -1,6 +1,8 @@
 DCFILE = DC-Taishan5280
 
-DAPS_FLAGS = -d $(DCFILE)
+LANGUAGES = en zh_CN
+
+DAPS_FLAGS = -d $(DCFILE) --force --adocattr="lang=$$l" --builddir=build/$$l
 
 ADOCS = $(wildcard adoc/*.adoc)
 
@@ -10,28 +12,43 @@ EXAMPLES = $(wildcard adoc/examples/*)
 
 SRCS = $(ADOCS) $(IMAGES) $(EXAMPLES)
 
-.PHONY : all clean pdf html html-single check-file check-link check-spell check
+.PHONY : all clean prep pdf html html-single check-file check-link check-spell check
 
-all : pdf
+all : html-single
 
-pdf : $(SRCS)
-	daps $(DAPS_FLAGS) pdf
+pdf : $(SRCS) prep
+	for l in $(LANGUAGES); do \
+		daps $(DAPS_FLAGS) pdf; \
+	done;
 
-html : $(SRCS)
-	daps $(DAPS_FLAGS) html
+html : $(SRCS) prep
+	for l in $(LANGUAGES); do \
+		daps $(DAPS_FLAGS) html; \
+	done;
 
-html-single : $(SRCS)
-	daps $(DAPS_FLAGS) html --single
+html-single : $(SRCS) prep
+	for l in $(LANGUAGES); do \
+		daps $(DAPS_FLAGS) html --single; \
+	done;
 
-check-file :
-	daps $(DAPS_FLAGS) list-srcfiles-unused
-	daps $(DAPS_FLAGS) list-images-missing
-	daps $(DAPS_FLAGS) list-images-multisrc
+check-file : prep
+	for l in $(LANGUAGES); do \
+		daps $(DAPS_FLAGS) list-srcfiles-unused; \
+		daps $(DAPS_FLAGS) list-images-missing; \
+		daps $(DAPS_FLAGS) list-images-multisrc; \
+	done;
 
-check-spell :
-	daps $(DAPS_FLAGS) spellcheck --list --lang=en_US
+check-spell : prep
+	for l in $(LANGUAGES); do \
+		daps $(DAPS_FLAGS) spellcheck --list --lang=$$l; \
+	done;
 
 check : check-file check-spell
+
+prep :
+	@for l in $(LANGUAGES); do \
+		mkdir -p build/$$l; \
+	done;
 
 clean :
 	-daps clean-all
