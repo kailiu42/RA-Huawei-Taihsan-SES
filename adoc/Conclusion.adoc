@@ -1,2 +1,6 @@
+ifeval::["{lang}" == "en"]
 == Conclusion
 The {vendor} {vPlatform} series represents a strong capacity-oriented platform. When combined with the access flexibility and reliability of SUSE Enterprise Storage and the industry leading support from {vendor}, any business can feel confident in the ability to address the exponential growth in storage they are currently faced with.
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

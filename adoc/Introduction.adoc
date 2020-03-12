@@ -1,3 +1,4 @@
+ifeval::["{lang}" == "en"]
 == Introduction
 The objective of this guide is to present a step-by-step guide on how to implement SUSE Enterprise Storage {SESVersion} on the {vendor} {vPlatform} platform. It is suggested that the document be read in its entirety, along with the supplemental appendix information before attempting the process.
 
@@ -12,14 +13,10 @@ This reference architecture is targeted at administrators who deploy software de
 The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform} leverages {serverModelCount} models of {vendor} servers. The role and functionality of each type of system within the SUSE Enterprise Storage environment will be explained in more detail in the architectural overview section.
 
 .Storage Nodes:
-* {vendor} {OSDModel}
-+
-{OSDYESLink}
+* link:{OSDYESLink}[{vendor} {OSDModel}]
 
 .{node2Roles}:
-* {vendor} {node2Model}
-+
-{node2YESLink}
+* link:{node2YESLink}[{vendor} {node2Model}]
 
 .Switches:
 * {switchVendor} {switchModel} {switchSpeed}
@@ -29,3 +26,6 @@ The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform}
 * SUSE Linux Enterprise Server {SLESVersion}
 
 TIP: Please note that limited use subscriptions are provided with SUSE Enterprise Storage as part of the subscription entitlement
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

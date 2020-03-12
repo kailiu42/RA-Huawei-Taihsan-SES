@@ -1,3 +1,4 @@
+ifeval::["{lang}" == "en"]
 == Architectural Overview
 This architecture overview section complements the https://www.suse.com/docrep/documents/1mdg7eq2kz/suse_enterprise_storage_technical_overview_wp.pdf[SUSE Enterprise Storage Technical Overview] document available online which presents the concepts behind software defined storage and Ceph as well as a quick start guide (non-platform specific).
 
@@ -48,3 +49,6 @@ Specific to this implementation, the following naming and addressing scheme were
 |OSD Node |osd3.example.com |10.1.1.6 |10.2.1.6
 |OSD Node |osd4.example.com |10.1.1.7 |10.2.1.7
 |===
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

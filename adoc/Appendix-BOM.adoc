@@ -1,9 +1,50 @@
 [appendix]
+ifeval::["{lang}" == "en"]
 == Bill of Materials
-
 [cols="2,1,3,6",options=header,frame=topbot,grid=rows]
 |===
 |Role |Qty |Component |Notes
+
+|Admin Node
+|1
+|A VM on a {vendor} x86 machine
+a| The node consists of:
+
+* 8x vCPU cores
+* 64GB RAM
+* 100GB virtual disk for OS
+* 2x virtual NIC port to public and cluster network
+
+|OSD nodes. MON, MGR shared the OSD hosts
+|4
+|{vendor} {vPlatform} {OSDModel}
+a| Each node consists of:
+
+* {OSDCPUCount}x {OSDCPUModel}
+* {OSDRAM}
+* 1x {node2CPUModel} Integrated SAS Controller
+* 2x 300GB SAS HDD for OS
+* 34x 4TB 7.2k SATA HDD for OSD
+* 2x {vendor} 1TB NVMe SSD for db and journal
+* 1x {node2CPUModel} Embedded Network Controller - 1GbE Quad Port
+* 1x Dual Port Intel 82599 10Gb Ethernet adapter
+
+|Software
+|1
+|SUSE Enterprise Storage {SESVersion} Subscription Base configuration
+|Allows for 4 storage nodes and 6 infrastructure nodes. Expansion subscriptions need to be purchased if more nodes need to be added to the cluster.
+
+|Switches
+|2
+|{switchVendor} {switchModel}
+|32 Ports of 100GbE
+|===
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+== 设备清单
+[cols="2,2,3,6",options=header,frame=topbot,grid=rows]
+|===
+|作用 |数量 |组件 |说明
 
 |Admin Node
 |1
@@ -39,3 +80,4 @@ a| Each node consists of:
 |{switchVendor} {switchModel}
 |32 Ports of 100GbE
 |===
+endif::[]

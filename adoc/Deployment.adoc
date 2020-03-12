@@ -1,3 +1,4 @@
+ifeval::["{lang}" == "en"]
 == Deployment
 This deployment section should be seen as a supplement online https://www.suse.com/documentation/[documentation]. Specifically, the https://www.suse.com/documentation/suse-enterprise-storage-5/book_storage_deployment/data/book_storage_deployment.html[SUSE Enterprise Storage 5 Deployment Guide] as well as https://www.suse.com/documentation/sles-12/book_sle_admin/data/book_sle_admin.html[SUSE Linux Enterprise Server Administration Guide]. It is assumed that a Subscription Management Tool server exists within the environment. If not, please follow the information in https://www.suse.com/documentation/sles-12/book_smt/data/book_smt.html[Subscription Management Tool (SMT) for SLES] to make one available. The emphasis is on specific design and configuration choices.
 
@@ -297,3 +298,6 @@ Some final considerations before deploying your own version of a SUSE Enterprise
 * It is important to maintain the minimum number of monitor nodes at three. As the cluster increases in size, it is best to increment in pairs, keeping the total number of Mon nodes as an odd number. However, only very large or very distributed clusters would likely need beyond the 3 MON nodes cited in this reference implementation. For performance reasons, it is recommended to use distinct nodes for the MON roles, so that the OSD nodes can be scaled as capacity requirements dictate.
 * Although in this specific implementation monitors were deployed on the OSD nodes due to shortage of equipment, ideally monitors should be deployed on dedicated nodes.
 * As described in this implementation guide and the SUSE Enterprise Storage documentation, a minimum of four OSD nodes is recommended, with the default replication setting of 3. This will ensure cluster operation, even with the loss of a complete OSD node. Generally speaking, performance of the overall cluster increases as more properly configured OSD nodes are added.
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

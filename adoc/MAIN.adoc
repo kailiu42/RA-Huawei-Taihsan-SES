@@ -4,8 +4,6 @@ include::../asciidoctor/data/locale/attributes.adoc[]
 //Fill in the following variables to rapidly populate this document template
 :SESVersion: v5.5
 :SLESVersion: 12 SP3
-:vendor: Huawei
-:vPlatform: Taishan
 :serverModelCount: two
 :OSDModel: 5280
 :OSDYESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=147070
@@ -20,12 +18,22 @@ include::../asciidoctor/data/locale/attributes.adoc[]
 :node2CPUCount: 1
 :node2RAM: 32GB
 :node2OSDriveDesc: mirrored SAS
-:switchVendor: Huawei
 :switchModel: CE6851-48S6Q-HI
 :switchSpeed: 10Gb
 //Set to 1 to include the information on configuring ConnectX-4 as Ethernet
 :MellanoxCX4Present: 0
 :bondingType: lacp
+
+ifeval::["{lang}" == "en"]
+:vendor: Huawei
+:vPlatform: Taishan
+:switchVendor: Huawei
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+:vendor: 华为
+:vPlatform: 泰山
+:switchVendor: 华为
+endif::[]
 
 = SUSE(R) Enterprise Storage on {vendor} {vPlatform} Implementation Guide
 Kai Liu <kai.liu@suse.com>

@@ -1,3 +1,4 @@
+ifeval::["{lang}" == "en"]
 [appendix]
 [[appendix-switch]]
 == Network Switch Configuration
@@ -15,3 +16,6 @@ In the OS bonding configuration, make sure below options are set:
 ----
 BONDING_MODULE_OPTS='mode=802.3ad miimon=100 lacp_rate=fast xmit_hash_policy=layer3+4'
 ----
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

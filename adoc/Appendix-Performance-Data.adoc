@@ -1,3 +1,4 @@
+ifeval::["{lang}" == "en"]
 [appendix]
 == Performance Data
 Comprehensive performance baselines are run as part of a reference build activity. This activity yields a vast amount of information that may be used to approximate the size and performance of the solution. The only tuning applied is documented in the implementation portion of this document.
@@ -196,3 +197,6 @@ The OLTP Datafile simulation is set for an 80/20 mix of random reads and writes.
 |3xRep | RBD |8K |2 |263.7 |12.6 |8 |1064.0 |11.9
 |EC2+2 | RBD |8K |3 |385.1 |64.2 |12 |1553.1 |19.8
 |===
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

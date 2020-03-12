@@ -1,24 +1,29 @@
+ifeval::["{lang}" == "en"]
 == References and Resources
-.SUSE Enterprise Storage Technical Overview
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+== 参考信息
+endif::[]
+SUSE Enterprise Storage Technical Overview::
 https://www.suse.com/media/white-paper/suse_enterprise_storage_technical_overview_wp.pdf
  
-.SUSE Enterprise Storage Tech Specs
+SUSE Enterprise Storage Tech Specs::
 https://www.suse.com/products/suse-enterprise-storage/#tech-specs
 
-.SUSE Enterprise Storage - Deployment Guide
+SUSE Enterprise Storage - Deployment Guide::
 https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html
 
-.SUSE Enterprise Storage - Administration Guide
+SUSE Enterprise Storage - Administration Guide::
 https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html
 
-.SUSE Linux Enterprise Server 12 SP3 - Deployment Guide
+SUSE Linux Enterprise Server 12 SP3 - Deployment Guide::
 https://www.suse.com/documentation/sles-12/singlehtml/book_sle_deployment/book_sle_deployment.html
 
-.SUSE Linux Enterprise Server 12 SP3 - Administration Guide
+SUSE Linux Enterprise Server 12 SP3 - Administration Guide::
 https://www.suse.com/documentation/sles-12/singlehtml/book_sle_admin/book_sle_admin.html
 
-.SUSE Linux Enterprise Server 12 SP3 - Storage Administration Guide
+SUSE Linux Enterprise Server 12 SP3 - Storage Administration Guide::
 https://www.suse.com/documentation/sles-12/singlehtml/stor_admin/stor_admin.html
 
-.Subscription Management Tool for SLES 12 SP3
+Subscription Management Tool for SLES 12 SP3::
 https://www.suse.com/documentation/sles-12/singlehtml/book_smt/book_smt.html
