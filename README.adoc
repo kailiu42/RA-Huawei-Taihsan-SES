@@ -1,0 +1,14 @@
+image::https://github.com/kailiu42/RA-Huawei-Taihsan-SES/workflows/Publish%20to%20Github%20Pages/badge.svg[Publish to Github Pages]
+
+This is the repository of the Reference Architecture document of running SUSE Enterprise Storage on Huawei Taishan servers.
+
+== View the docs
+Documents are built automatically when new versions are committed.
+
+.English
+* https://kailiu42.github.io/RA-Huawei-Taihsan-SES/en/[HTML]
+* https://kailiu42.github.io/RA-Huawei-Taihsan-SES/en/Taishan-SES_en.pdf[PDF]
+
+.中文 (翻译中)
+* https://kailiu42.github.io/RA-Huawei-Taihsan-SES/zh_CN/[HTML]
+* https://kailiu42.github.io/RA-Huawei-Taihsan-SES/zh_CN/Taishan-SES_zh_CN.pdf[PDF]
