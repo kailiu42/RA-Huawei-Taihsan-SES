@@ -1,4 +1,6 @@
-DCFILE = DC-Taishan5280
+PRJ = Taishan-SES
+
+DCFILE = DC-$(PRJ)
 
 LANGUAGES = en zh_CN
 
@@ -12,9 +14,9 @@ EXAMPLES = $(wildcard adoc/examples/*)
 
 SRCS = $(ADOCS) $(IMAGES) $(EXAMPLES)
 
-.PHONY : all clean prep pdf html html-single check-file check-link check-spell check
+.PHONY : all clean dist prep pdf html check-file check-link check-spell check
 
-all : html-single
+all : dist
 
 pdf : $(SRCS) prep
 	for l in $(LANGUAGES); do \
@@ -22,11 +24,6 @@ pdf : $(SRCS) prep
 	done;
 
 html : $(SRCS) prep
-	for l in $(LANGUAGES); do \
-		daps $(DAPS_FLAGS) html; \
-	done;
-
-html-single : $(SRCS) prep
 	for l in $(LANGUAGES); do \
 		daps $(DAPS_FLAGS) html --single; \
 	done;
@@ -50,5 +47,13 @@ prep :
 		mkdir -p build/$$l; \
 	done;
 
+dist : html pdf
+	mkdir -p dist
+	@for l in $(LANGUAGES); do \
+		cp -a build/$$l/$(PRJ)/single-html/$(PRJ) dist/$$l; \
+		cp -a build/$$l/$(PRJ)/$(PRJ)_color_$$l.pdf dist/$$l/$(PRJ)_$$l.pdf; \
+	done;
+
 clean :
 	-daps clean-all
+	rm -rf build dist
