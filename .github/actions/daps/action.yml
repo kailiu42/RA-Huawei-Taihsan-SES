@@ -1,0 +1,12 @@
+name: 'DAPS'
+description: 'Run daps in a openSUSE Tumbleweed container'
+inputs:
+  cmd:
+    description: 'The command to execute'
+    required: true
+    default: 'make'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.cmd }}

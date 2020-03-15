@@ -1,0 +1,25 @@
+name: Publish to Github Pages
+on: [push, pull_request]
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    container:
+      image: liukaicn/daps:latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v2
+      - name: Checkout submodule
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Build content
+        run: make
+      - name: Publish to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
