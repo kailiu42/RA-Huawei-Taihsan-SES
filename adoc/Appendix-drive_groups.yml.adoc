@@ -1,0 +1,7 @@
+[appendix]
+[[appendix-drive-groups-yml]]
+== drive_groups.yml example
+[source,yaml]
+----
+include::examples/drive_groups.yml[]
+----

@@ -1,0 +1,8 @@
+default:
+  target: 'I@roles:storage'
+  data_devices:
+    # Use all hard disks as data device
+    rotational: 1
+  db_devices:
+    # Use solid state drives as db device
+    rotational: 0

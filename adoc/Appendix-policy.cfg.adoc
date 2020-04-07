@@ -1,6 +1,6 @@
 [appendix]
 [[appendix-policy-cfg]]
-== policy.cfg
+== policy.cfg example
 [source,yaml]
 ----
 include::examples/policy.cfg[]

@@ -4,33 +4,51 @@ This deployment section should be seen as a supplement online https://www.suse.c
 
 In this document we use `example.com` as the domain name for the nodes, replace it with your real domain name in your own installation.
 
-=== Network Deployment Overview
+=== Network Considerations
 The following considerations for the network configuration should be attended to:
 
 * Ensure that all network switches are updated with consistent firmware versions.
-ifeval::["{BondingType}" == "lacp"]
-* Configure 802.3ad for system port bonding between the switches, plus enable jumbo frames.
-* Specific configuration for this deployment can be found in <<appendix-switch>>
-endif::[]
 * Network IP addressing and IP ranges need proper planning. In optimal environments, a dedicated storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, dedicated subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current as well as future growth should be taken into consideration.
-* Setup DNS A records for all nodes. Decide on subnets and VLANs and configure the switch ports accordingly.
-* Always use the same type (short or full) of hostname every where, for Salt master/minions etc.
-* Ensure that you have access to a valid, reliable NTP service, as this is a critical requirement for all nodes. If not, it is recommended to use the admin node.
 
-=== Hardware Recommended Actions
+=== Hardware Considerations
 The following considerations for the hardware platforms should be attended to:
 
-* Configure the boot media as RAID-1.
-* Configure all data and journal devices as individual RAID-0 if RAID controllers with hardware write cache are configured.
+* Configure the system to performance mode if you prefer performance over power efficiency. To change that, reboot the system, press kbd:[Del] when prompted during system initializing to boot into the BIOS setup menu. Then select menu:Advanced[Performance Config > Power Policy], select btn:[Performance] for best performance or btn:[Efficiency] for power efficiency.
++
+NOTE: The {vendor} {vPlatform} server platform currently does not support OS controlled processor frequency scaling. The only way to change the system power policy is to reboot and change it in the system BIOS.
 
-=== Operating System Installation
-There are several key tasks to ensure are performed correctly during the operating system installation. During the SUSE Linux Enterprise installation, be sure and register the system with an update server. Ideally, this is a local SMT server which will reduce the time required for updates to be downloaded and applied to all nodes. By updating the nodes during installation, the system will deploy with the most up-to-date packages available, helping to ensure the best experience possible.
+* In case you can't see the SUSE Installer screen after booting up the SUSE installation medium, check the BIOS option menu:Advanced[MISC Config > Support SPCR] and set it to btn:[Disabled].
 
-To speed installation, on the System Role screen, it is suggested to select KVM Virtualization Host. When the Installation Settings screen is reached, select *Software* and then un-check KVM Host Server. The resulting installation is a text mode server that is an appropriate base OS for SUSE Enterprise Server.
+* A RAID-1 volume consists of two 600GB SAS hard drive is enough for the OS disk.
 
-The next item is to ensure that the operating system is installed on the correct device. Especially on OSD nodes, the system may not choose the right drive by default. The proper way to ensure the right device is being used is to select *Create Partition Setup* on the Suggested Partitioning screen. This will then display a list of devices, allowing selection of the correct boot device. Next select *Edit Proposal Settings* and unselect the *Propose Separate Home Partition* checkbox.
+* If hard drives are connected to hardware RAID controller(s) with hardware write cache, configure each of them as individual RAID-0 volume and make sure hardware caching is enabled.
 
-Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster. And keep in mind that the NTP service is not designed to be run on an virtualized environment, so make sure the NTP server been used is an physical machine or it may cause strange clock drifting problem.
+* Try to balance the drives across controllers, ports, and enclosures. Avoid making one part of the I/O subsystem busy while leaving other parts idle.
+
+* If SAS/SATA SSDs are installed, make sure to attach then to a dedicated HBA or RAID controller rather than to the controller that already has many HDDs attached.
+
+=== Operating System Considerations
+The following considerations for the Operating System should be attended to:
+
+* The underlying OS for SES {SESVersion} is SUSE Linux Enterprise Server {SLESVersion}. Other OS versions are not supported. During installation, make sure below addon modules are selected.
+
+** Base system module
+** Server Applications module
+** SUSE Enterprise Storage 6
+
+* During installation, don't select any GUI components such as X-Window system, GNOME or KDE, as they are not needed to run the storage service. 
+
+* It is highly recommended to register the systems to an update server to install the latest updates available, helping to ensure the best experience possible. The systems could be registered directly to SUSE Customer Center if it is a small cluster, or could be registered to a local SMT or RMT server when the cluster is large. Installing updates from a local SMT/RMT server will dramatically reduce the time required for updates to be downloaded to all nodes.
++
+TIP: Refer to https://documentation.suse.com/en-us/sles/15-SP1/single-html/SLES-rmt/[Repository Mirroring Tool Guide] for how to setup a RMT server.
+
+* Ensure that the operating system is installed on the correct device. Especially on OSD nodes, the installer may not choose the right one from many available drives.
+
+* Hostnames of all nodes should be properly configured. Full hostname (i.e. with domain name) should always be assigned for each node or else the deployment may fail. Make sure `hostname -s`, `hostname -f` and `hostname -i` commands return proper results for short hostname (without dots), full hostname and IP addresses. Each node must also be able to resolve hostname of all nodes, including its own name.
+** For a rather small cluster, hosts files can be used for name resolution. Also see <<_copy_files_to_all_cluster_nodes>> for how to conveniently keep the hosts on all nodes in sync.
+** Having a DNS server is recommended for a larger cluster. See the https://documentation.suse.com/sles/15-SP1/single-html/SLES-admin/#cha-dns[SUSE Linux Enterprise Server Administration Guide] for how to setup a DNS server.
+
+* Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster. And keep in mind that the NTP service is not designed to be run on an virtualized environment, so make sure the NTP server been used is an physical machine or it may cause strange clock drifting problem.
 
 === SUSE Enterprise Storage Installation & Configuration
 ==== Software Deployment Configuration (Deepsea and Salt)
@@ -40,21 +58,21 @@ There are three key Salt imperatives that need to be followed:
 
 * The Salt Master is the host that controls the entire cluster deployment. Ceph itself should NOT be running on the master as all resources should be dedicated to Salt master services. In our scenario, we used the Admin host as the Salt master.
 * Salt minions are nodes controlled by Salt master. OSD, monitor, and gateway nodes are all Salt minions in this installation.
-* Salt minions need to correctly resolve the Salt master’s host name over the network. This can be achieved through configuring unique host names per interface (eg osd1-cluster.example.com and osd1-public.example.com) in DNS and/or local /etc/hosts files.
+* Salt minions need to correctly resolve the Salt master’s host name.
 
-Deepsea consists of series of Salt files to automate the deployment and management of a Ceph cluster. It consolidates the administrator’s decision making in a single location around cluster assignment, role assignment and profile assignment. Deepsea collects each set of tasks into a goal or stage.
+Deepsea consists of series of Salt files to automate the deployment and management of a Ceph cluster. It consolidates the administrator’s decision making in a single location around cluster layout, node role assignment and drive assignment. Deepsea collects each set of tasks into a goal or stage.
 
-The following steps, performed in order, will be used for this reference implementation:
+The following steps, performed in order, were used for this reference implementation. All commands were run by root user.
 
 ==== Prepare All Nodes
-. Install DeepSea on the Salt master which is the Admin node:
+. Install salt master on the Admin node:
 +
 ----
 zypper in salt-master
 ----
 +
 
-. Start the salt-master service and enable:
+. Start the salt-master service and enable start on boot:
 +
 ----
 systemctl enable --now salt-master.service
@@ -70,10 +88,10 @@ zypper in salt-minion
 
 . Configure all minions to connect to the Salt master:
 +
-Modify the entry for master in the _/etc/salt/minion_
+Create a new file `/etc/salt/minion.d/master.conf` with the following content: 
 +
 ----
-master: sesadmin.example.com
+master: admin.example.com
 ----
 +
 
@@ -92,25 +110,33 @@ salt-call --local key.finger
 ----
 +
 
-. List all minion fingerprints on the Salt master, verify them against the fingerprints on each minions to make sure they all match. If they do, accept all Salt keys on the Salt master:
+. List all incoming minion fingerprints on the Salt master, verify them against the fingerprints on each minions to make sure they all match. If they do, accept all Salt keys on the Salt master:
 +
 ----
 salt-key -F
+salt-key --accept-all
 salt-key --list-all
-salt-key –-accept-all
 ----
 +
 
-. Verify if Salt works properly by "ping" each minions. They should all return True on success:
+. Verify if Salt works properly by "ping" each minions from the Salt master. They should all return True on success:
 +
 ----
 salt '*' test.ping
 ----
 
-==== Prepare OSD Disks on OSD Nodes
-If the OSD nodes were used in a prior installation, zap ALL the OSD disks first.
+. Now check and make sure the time on all nodes are the same. In later stage Deepsea will setup all nodes to synchronize time from the admin node, but before that is done, strange errors may occur if time on each node are largely out of sync. So it's better to set all nodes to the same time manually first. For example, run below command on your admin node:
++
+----
+salt '*' cmd.run 'date -s "2020-03-19 17:30:00"'
+----
+Use your actual time in the same format when running the command. It doesn't have to be super accurate, as later all nodes will be synchronized by the chrony time service.
 
-IMPORTANT: This must be done on all the OSD disks that were used in a prior installation, or else the deployment will fail when activating OSDs.
+
+==== Prepare OSD Disks on OSD Nodes
+If the OSD nodes were used in a prior installation, or the disks are used by other applications before, zap ALL the OSD disks first.
+
+IMPORTANT: This must be done on all the OSD disks that were used before, or else the deployment may fail when activating OSDs.
 
 WARNING: Below commands should not be copied and executed on your installation blindly. The device names used below are just examples, you need to change them to match only the OSD disks in your own installation. Failed to use the correct device name may erase your OS disk or other disks that may hold valuable data.
 
@@ -124,19 +150,18 @@ done
 ----
 +
 
-. Wipe the partition table:
+. Wipe the beginning of the drive:
 +
 ----
-sgdisk -Z --clear -g /dev/sdX
+dd if=/dev/zero of=/dev/sdX bs=512 count=34 oflag=direct
 ----
 +
 	
-. Wipe the backup partition tables:
+. Wipe the end of the drive:
 +
 ----
-size=`blockdev --getsz /dev/sdX`
-position=$((size/4096 - 33))
-dd if=/dev/zero of=/dev/sdX bs=4M count=33 seek=$position oflag=direct
+dd if=/dev/zero of=/dev/sdX bs=512 count=33 \
+  seek=$((`blockdev --getsz /dev/sdX` - 33)) oflag=direct
 ----
 
 ==== Install and Configure Deepsea on Admin Node
@@ -165,7 +190,7 @@ time_server: <Address of NTP server, if this line is omitted admin node will be 
 ----
 
 ==== Deploy Using Deepsea
-At this point Deepsea commands can be run to deploy the cluster.
+At this point Deepsea commands can be run on the admin node to deploy the cluster.
 
 [TIP]
 ====
@@ -190,7 +215,7 @@ deepsea stage run ceph.stage.0
 
 IMPORTANT: If the Salt master reboots during Stage 0, you need to run Stage 0 again after it boots up.
 
-Optionally, create the /var/lib/ceph btrfs subvolume:
+Optionally, create the _/var/lib/ceph_ btrfs subvolume:
 ----
 salt-run state.orch ceph.migrate.subvolume
 ----
@@ -212,34 +237,6 @@ cp /usr/share/doc/packages/deepsea/examples/policy.cfg-rolebased /srv/pillar/cep
 
 TIP: See <<appendix-policy-cfg>> for the one used when installing the cluster described in this document.
 
-A proposal for the storage layout needs to be generated at this time. For the hardware configuration used for this work, the following command was utilized:
-----
-salt-run proposal.populate
-----
-
-The proposal generator will automatically use hard disks for OSD storage and NVMe SSDs for BlueStore WAL and DB storage.
-
-[TIP]
-====
-On your own deployment you may need to play with the proposal generator with different arguments for several times to get what you really want.
-
-To print the help text about the various arguments proposal command accepts:
-----
-salt-run proposal.help
-----
-
-To show the generated proposal on screen according to the arguments passed:
-----
-salt-run proposal.peek <arguments>
-----
-
-To write the proposal to the _/srv/pillar/ceph/proposals_ subdirectory:
-----
-salt-run proposal.populate <arguments> name=myprofile
-----
-Pass the argument `name=myprofile` to the command to name the storage profile. This will result in a `profile-myprofile` subdirectory been created to store the new proposal files.
-====
-
 ===== Stage 2: Configure
 During this stage necessary configuration data are prepared in particular format.
 ----
@@ -254,13 +251,36 @@ salt '*' pillar.items
 ----
 ====
 
+===== Define drive groups
+DriveGroups information are defined in the file _/srv/salt/ceph/configuration/files/drive_groups.yml_. It specifies what drives should be used for data device, DB device, or WAL device, and other parameters for setting up the OSDs.
+
+. First take a look of all the disks on all OSD nodes:
++
+----
+salt-run disks.details
+----
++
+It lists the vendor, model, size and type of the disks. Those information can be used to match a group of drives and assign them to different uses.
+
+. Now define drive groups in the drive_groups.yml file.
++
+TIP: See <<appendix-drive-groups-yml>> for the drive group definition used in this example cluster.
+For complete information refers to the https://documentation.suse.com/en-us/ses/6/single-html/ses-deployment/#ds-drive-groups[Deployment Guide]
+
+. After finished editing _drive_groups.yml_, run below commands to see the result definition. Exam it carefully and make sure it meets your expectation before moving on to next step.
++
+----
+salt-run disks.list
+salt-run disks.report
+----
+
 ===== Stage 3: Deploy
-A basic Ceph cluster with mandatory Ceph services is created.
+A basic Ceph cluster with mandatory Ceph services is created in this stage.
 ----
 deepsea stage run ceph.stage.3
 ----
 
-NOTE: It may take quite some time for above command to finish if your cluster is large, or your Internet bandwidth is limited while you didn't register the nodes to local SMT server.
+NOTE: It may take quite some time for above command to finish if your cluster is large, your have a lot of disks, or your Internet bandwidth is limited while you didn't register the nodes to local SMT server.
 
 After the above command is finished successfully, check whether the cluster is up by running:
 ----
@@ -291,13 +311,6 @@ ceph osd pool delete test test --yes-i-really-really-mean-it
 ceph tell mon.* injectargs --mon-allow-pool-delete=false
 ----
 
-=== Deployment Considerations
-Some final considerations before deploying your own version of a SUSE Enterprise Storage cluster, based on Ceph. As previously stated, please refer to the Administration and Deployment Guide.
-
-* With the default replication setting of 3, remember that the client-facing network will have about half or less of the traffic of the backend network. This is especially true when component failures occur or rebalancing happens on the OSD nodes. For this reason, it is important not to under provision this critical cluster and service resource.
-* It is important to maintain the minimum number of monitor nodes at three. As the cluster increases in size, it is best to increment in pairs, keeping the total number of Mon nodes as an odd number. However, only very large or very distributed clusters would likely need beyond the 3 MON nodes cited in this reference implementation. For performance reasons, it is recommended to use distinct nodes for the MON roles, so that the OSD nodes can be scaled as capacity requirements dictate.
-* Although in this specific implementation monitors were deployed on the OSD nodes due to shortage of equipment, ideally monitors should be deployed on dedicated nodes.
-* As described in this implementation guide and the SUSE Enterprise Storage documentation, a minimum of four OSD nodes is recommended, with the default replication setting of 3. This will ensure cluster operation, even with the loss of a complete OSD node. Generally speaking, performance of the overall cluster increases as more properly configured OSD nodes are added.
 endif::[]
 ifeval::["{lang}" == "zh_CN"]
 endif::[]

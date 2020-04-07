@@ -10,7 +10,7 @@ Upon completion of the steps in this document, a working SUSE Enterprise Storage
 This reference architecture is targeted at administrators who deploy software defined storage solutions within their data centers and making the different storage services accessible to their own customer base. By following this document as well as those referenced herein, the administrator should have a full view of the SUSE Enterprise Storage architecture, deployment and administrative tasks, with a specific set of recommendations for deployment of the hardware and networking platform.
 
 == Hardware & Software
-The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform} leverages {serverModelCount} models of {vendor} servers. The role and functionality of each type of system within the SUSE Enterprise Storage environment will be explained in more detail in the architectural overview section.
+The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform} leverages {serverModelCount} models of {vendor} servers. The role and functionality of each type of system within the SUSE Enterprise Storage environment will be explained in more detail in the <<_architectural_overview>> section.
 
 .Storage Nodes:
 * link:{OSDYESLink}[{vendor} {OSDModel}]
@@ -24,8 +24,6 @@ The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform}
 .Software:
 * SUSE Enterprise Storage {SESVersion}
 * SUSE Linux Enterprise Server {SLESVersion}
-
-TIP: Please note that limited use subscriptions are provided with SUSE Enterprise Storage as part of the subscription entitlement
 endif::[]
 ifeval::["{lang}" == "zh_CN"]
 endif::[]
