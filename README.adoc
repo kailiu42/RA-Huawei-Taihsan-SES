@@ -12,3 +12,23 @@ Documents are built automatically when new versions are committed.
 .中文 (翻译中)
 * https://kailiu42.github.io/RA-Huawei-Taihsan-SES/zh_CN/[HTML]
 * https://kailiu42.github.io/RA-Huawei-Taihsan-SES/zh_CN/Taishan-SES_zh_CN.pdf[PDF]
+
+== Build the docs
+The docs are built by the https://github.com/openSUSE/daps[DocBook Authoring and Publishing Suite]. It is available for online installation from the openSUSE software repository.
+
+To install the dependencies on openSUSE, just run:
+----
+make install-deps
+----
+
+To build HTML doc, run:
+----
+make html
+----
+
+To build HTML doc, run:
+----
+make pdf
+----
+
+Result documents then can be found under the ./build/ dir.

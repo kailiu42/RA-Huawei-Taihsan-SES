@@ -18,6 +18,9 @@ SRCS = $(ADOCS) $(IMAGES) $(EXAMPLES)
 
 all : dist
 
+install-deps :
+	sudo zypper in -y daps suse-xsl-stylesheets ruby2.6-rubygem-asciidoctor git make tar
+
 pdf : $(SRCS) prep
 	for l in $(LANGUAGES); do \
 		daps $(DAPS_FLAGS) pdf; \
