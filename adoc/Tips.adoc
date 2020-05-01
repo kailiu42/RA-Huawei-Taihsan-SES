@@ -23,14 +23,9 @@ Salt minion name. Useful if changed host name and need to change minion name acc
 Deepsea minion targets
 
 /srv/pillar/ceph/stack/ceph/cluster.yml::
-Deepsea cluster configuration for the cluster "ceph" (the default cluster name). Need to run stage 2 configure after modification.
-Or refresh pillar and check:
-----
-# salt <target> saltutil.pillar_refresh
-# salt <target> pillar.items
-----
+Deepsea cluster configuration for the cluster "ceph" (the default cluster name). After modification Deepsee stage 2 need to be run to make it in effect.
 
-.Cluster configuration files
+.Cluster configuration files:
 /srv/pillar/ceph/stack/global.yml::
 Affects all minions in the Salt cluster.
 
@@ -50,20 +45,12 @@ In case you did something wrong and would like to start over without re-installi
 # salt-run state.orch ceph.purge
 ----
 
-=== Erase OSD drives
-Sometimes it's necessary to completely erase the information left from other programs or previous installtions.
-
-Besides of removing the partition table, the first few hundred MBs must also be cleared because that's the Bluestore small partition that has a filesystem, which holds some key information of that Bluestore disk. If it is not erased, the filesystem will be intact and it still holds the old information so reinstall will fail.
-
-----
-salt '<osd target>' cmd.run 'for d in {<start letter>..<end letter>}; do ceph-disk zap /dev/sd$d; dd if=/dev/zero of=/dev/sd$d bs=1M count=500; done'
-----
-
 === How to get salt pillar information
 ----
+# salt '*' saltutil.pillar_refresh
 # salt '*' pillar.items
 ----
-This can only give information after running stage 1 AKA the discovery stage
+This will only give information after running stage 1 AKA the discovery stage.
 
 === SES built-in network benchmark
 https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html#storage.bp.performance.net_issues
