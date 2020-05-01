@@ -21,12 +21,12 @@ To install the dependencies on openSUSE, just run:
 make install-deps
 ----
 
-To build HTML doc, run:
+To build HTML docs, run:
 ----
 make html
 ----
 
-To build HTML doc, run:
+To build PDF docs, run:
 ----
 make pdf
 ----
