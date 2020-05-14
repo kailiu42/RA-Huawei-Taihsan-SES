@@ -12,7 +12,7 @@ This software defined storage solution enables transformation of the enterprise 
 SUSE Enterprise Storage delivers a highly scalable, resilient, self-healing storage system designed for large scale environments ranging from hundreds of Terabytes to Petabytes. This software defined storage product can reduce IT costs by leveraging industry standard servers to present unified storage servicing block, file, and object protocols. Having storage that can meet the current needs and requirements of the data center while supporting topologies and protocols demanded by new web-scale applications, enables administrators to support the ever-increasing storage requirements of the enterprise with ease.
 
 === {vendor} {vPlatform}
-{vendor} {vPlatform} servers provide a cost effective and scalable platform for the deployment of SUSE Enterprise Storage. These platforms unlocks the full potential of the Kunpeng CPU, raising the bar of SPECint benchmark by 25%, with up to 128 cores, 32 DDR4 DIMMs, PCIe 4.0, CCIX, and 100 GE LOM.
+{vendor} {vPlatform} servers provide a cost effective and scalable platform for the deployment of SUSE Enterprise Storage. These platforms unlocks the full potential of the Kunpeng CPU, raising the bar of SPECint benchmark by 25%, with up to 128 cores, 32 DDR4 DIMM slots, PCIe 4.0 support, and 100 GE LOM.
 
 Featuring models tailored for computing, storage, or balanced needs, {vPlatform} is perfect for demanding workloads such as big data analytics, database acceleration, high-performance computing, and cloud services. {vPlatform} servers empower data centers with the ultimate efficiency.
 endif::[]

@@ -4,7 +4,7 @@ The default time server is the admin node. To change it, add
 ----
 time_server: <server address>
 ----
-in cluster.yml
+in _/srv/pillar/ceph/stack/ceph/cluster.yml_
 
 === Copy files to all cluster nodes
 `salt-cp` command can be used to copy files from the salt master node to minion nodes. This can be very convenient, for example, to keep /etc/hosts file in sync on all nodes.
@@ -53,14 +53,14 @@ In case you did something wrong and would like to start over without re-installi
 This will only give information after running stage 1 AKA the discovery stage.
 
 === SES built-in network benchmark
-https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html#storage.bp.performance.net_issues
+See the https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html#storage.bp.performance.net_issues[Administration Guide]
 
 ----
 # salt-run net.iperf cluster=ceph output=full
 ----
 
 === Ceph built-in OSD benchmark
-https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html#storage.bp.performance.slowosd
+See https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_admin/book_storage_admin.html#storage.bp.performance.slowosd[Administration Guide]
 
 ----
 # ceph tell osd.<id> bench
@@ -72,13 +72,13 @@ https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_sto
 ----
 
 === Interface bonding
-Use following parameters for bonding in 802.3ad mode (need switch support).
+Use following parameters for the bonding module in 802.3ad mode (need switch support).
+----
 mode=802.3ad miimon=100 lacp_rate=fast xmit_hash_policy=layer3+4
+----
 
-Recommended Size for the BlueStore's WAL and DB Device
-https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html#about.bluestore
-
-https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html#rec.waldb.size
+=== Recommended Size for the BlueStore's WAL and DB Device
+See the https://documentation.suse.com/en-us/ses/6/single-html/ses-deployment/#rec-waldb-size[Deployment Guide]
 
 
 === Offline setup

@@ -13,13 +13,13 @@ This reference architecture is targeted at administrators who deploy software de
 The recommended architecture for SUSE Enterprise Storage on {vendor} {vPlatform} leverages {serverModelCount} models of {vendor} servers. The role and functionality of each type of system within the SUSE Enterprise Storage environment will be explained in more detail in the <<_architectural_overview>> section.
 
 .Storage Nodes:
-* link:{OSDYESLink}[{vendor} {OSDModel}]
+* link:{OSDLink}[{vendor} {OSDModel}]
 
 .{node2Roles}:
-* link:{node2YESLink}[{vendor} {node2Model}]
+* link:{node2Link}[{vendor} {node2Model}]
 
 .Switches:
-* {switchVendor} {switchModel} {switchSpeed}
+* {switchVendor} {switchModel} {switchSpeed}. Higher speed model is recommended if high speed NIC is installed.
 
 .Software:
 * SUSE Enterprise Storage {SESVersion}

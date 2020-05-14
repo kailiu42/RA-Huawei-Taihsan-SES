@@ -1,0 +1,59 @@
+ifeval::["{lang}" == "en"]
+== Deployment
+This deployment section should be seen as a supplement to the https://documentation.suse.com/[SUSE official documentations]. Please refer to the <<References and Resources>> for the list of related SUSE documents.
+
+It is assumed that a Subscription Management Tool server or a Repository Mirroring Server exists within the environment. If not, please follow the https://documentation.suse.com/sles/15-SP1/single-html/SLES-rmt/#book-rmt[RMT Guide] and <<Offline setup>> to make one available.
+
+In this document we use `example.com` as the domain name for the nodes, replace it with your real domain name in your own installation.
+
+=== Network Considerations
+The following considerations for the network configuration should be attended to:
+
+* Ensure that all network switches are updated with consistent firmware versions.
+
+* Depending on the network interface bonding mode used on the servers, corresponding switch port configuration may be required. Please consult your network administrator for that topic as it's out of the scope of this document.
+
+* Network IP addressing and IP ranges need proper planning. In optimal environments, a dedicated storage subnet should be used for all SUSE Enterprise Storage nodes on the primary network, with a separate, dedicated subnet for the cluster network. Depending on the size of the installation, ranges larger than /24 may be required. When planning the network, current size as well as future growth should be taken into consideration.
+
+=== Hardware Considerations
+The following considerations for the hardware platforms should be attended to:
+
+* Configure the system to run in performance mode if you prefer performance over power efficiency. To change that, reboot the system, press kbd:[Del] when prompted during system initializing to boot into the BIOS setup menu. Then select menu:Advanced[Performance Config > Power Policy], select btn:[Performance] for best performance or btn:[Efficiency] for power efficiency.
+
+* In case you don't see the SUSE Installer screen after boot up from the SUSE installation medium, check the BIOS option menu:Advanced[MISC Config > Support SPCR] and set it to btn:[Disabled].
+
+* A RAID-1 volume consists of two 600GB SAS hard drive is enough for the OS disk.
+
+* If hard drives are connected to hardware RAID controller(s) with hardware write cache, configure each of them as individual RAID-0 volume and make sure hardware caching is enabled.
+
+* Try to balance the drives across controllers, ports, and enclosures. Avoid making one part of the I/O subsystem busy while leaving other parts idle.
+
+* If SAS/SATA SSDs are installed, make sure to attach then to a dedicated HBA or RAID controller rather than to the controller that already has many HDDs attached.
+
+=== Operating System Considerations
+The following considerations for the Operating System should be attended to:
+
+* The underlying OS for SES {SESVersion} is SUSE Linux Enterprise Server {SLESVersion}. Other OS versions are not supported. During installation, make sure below addon modules are selected.
+
+** Base system Module
+** Server Applications Module
+** SUSE Enterprise Storage 6
++
+NOTE: SUSE Enterprise Storage is a paid product in it's own. You need to purchase the subscription before you can install it as an add-on on top of SUSE Linux Enterprise Server.
+
+* During installation, don't select any GUI components such as X-Window system, GNOME or KDE, as they are not needed to run the storage service. 
+
+* It is highly recommended to register the systems to an update server to install the latest updates available, helping to ensure the best experience possible. The systems could be registered directly to SUSE Customer Center if it is a small cluster, or could be registered to a local SMT or RMT server when the cluster is large. Installing updates from a local SMT/RMT server will dramatically reduce the time required for updates to be downloaded to all nodes.
++
+TIP: Refer to https://documentation.suse.com/en-us/sles/15-SP1/single-html/SLES-rmt/[Repository Mirroring Tool Guide] for how to setup a RMT server.
+
+* Ensure that the operating system is installed on the correct device. Especially on OSD nodes, the installer may not choose the right one from many available drives.
+
+* Hostnames of all nodes should be properly configured. Full hostname (i.e. with domain name) should always be assigned for each node or else the deployment may fail. Make sure `hostname -s`, `hostname -f` and `hostname -i` commands return proper results for short hostname (without dots), full hostname and IP addresses. Each node must also be able to resolve hostname of all nodes, including its own name.
+** For a rather small cluster, hosts files can be used for name resolution. Also see <<_copy_files_to_all_cluster_nodes>> for how to conveniently keep the hosts on all nodes in sync.
+** Having a DNS server is recommended for a larger cluster. See the https://documentation.suse.com/sles/15-SP1/single-html/SLES-admin/#cha-dns[SUSE Linux Enterprise Server Administration Guide] for how to setup a DNS server.
+
+* Do ensure that NTP is configured to point to a valid, physical NTP server. This is critical for SUSE Enterprise Storage to function properly, and failure to do so can result in an unhealthy or non-functional cluster. And keep in mind that the NTP service is not designed to be run on an virtualized environment, so make sure the NTP server been used is an physical machine or it may cause strange clock drifting problem.
+endif::[]
+ifeval::["{lang}" == "zh_CN"]
+endif::[]

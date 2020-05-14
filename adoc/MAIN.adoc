@@ -8,20 +8,20 @@ include::../asciidoctor/data/locale/attributes.adoc[]
 :SESVersion: 6
 :SLESVersion: 15 SP1
 :serverModelCount: two
-:OSDModel: 5280
-:OSDYESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=147070
+:OSDModel: 5280 v2
+:OSDLink: https://e.huawei.com/uk/products/servers/taishan-server/taishan-5280-v2
 :OSDCPUModel: Kunpeng 920
 :OSDCPUCount: 2
 :OSDRAM: 256GB
 :OSDDriveDesc: Hard Disk
 :node2Roles: Admin, monitor, and protocol gateways
-:node2Model: 2280
-:node2YESLink: https://www.suse.com/nbswebapp/yesBulletin.jsp?bulletinNumber=146997
+:node2Model: 2280 v2
+:node2Link: https://e.huawei.com/uk/products/servers/taishan-server/taishan-2280-v2
 :node2CPUModel: Kunpeng 920
 :node2CPUCount: 1
 :node2RAM: 32GB
 :node2OSDriveDesc: mirrored SAS
-:switchModel: CE6851-48S6Q-HI
+:switchModel: 
 :switchSpeed: 10Gb
 //Set to 1 to include the information on configuring ConnectX-4 as Ethernet
 :MellanoxCX4Present: 0
@@ -40,7 +40,7 @@ endif::[]
 
 = SUSE(R) Enterprise Storage {SESversion} on {vendor} {vPlatform} Implementation Guide
 Kai Liu <kai.liu@suse.com>
-v2.0, Mar 15 2020: Secon edition
+v2.0, May 14 2020: Second Edition
 
 // Introductions, target audience and hw&sw configuration
 include::Introduction.adoc[]
@@ -53,6 +53,9 @@ include::SES-Arch.adoc[]
 
 // Component model
 include::Component.adoc[]
+
+// Pre-deployment considerations
+include::Considerations.adoc[]
 
 // Deployment steps
 include::Deployment.adoc[]
@@ -67,7 +70,7 @@ include::Conclusion.adoc[]
 include::References.adoc[]
 
 // Appendixes
-include::Appendix-BOM.adoc[]
-include::Appendix-Network-Switch.adoc[]
+// include::Appendix-BOM.adoc[]
+// include::Appendix-Network-Switch.adoc[]
 include::Appendix-policy.cfg.adoc[]
 include::Appendix-drive_groups.yml.adoc[]
